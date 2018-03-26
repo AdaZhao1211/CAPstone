@@ -33,7 +33,7 @@ getOpcode(instr): return opcode according to the instruction
 */
 var Registers = {
     // "use strict";
-    values: [1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3],
+    values: [0, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3],
 
     table: ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3",
         "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
@@ -89,13 +89,25 @@ var Registers = {
 
     },
 
-    // get: function(r_name) {
-    //     return this.parse(r_name);
-    // },
-    // set: function(r_name, value) {
-    //     this.values[this.index(r_name)] = value
+    get: function(index) {
+        return this.values[index];
+    },
+    set: function(index, value) {
+        this.values[index] = value
+    },
 
-    // },
+    getRegs: function() {
+        var regs = [];
+        for (var i = 0; i < this.values.length; i++) {
+            num = this.values[i].toString();
+            while (num.length < 3) {
+                num = "0" + num;
+            }
+            regs.push(num);
+        }
+        return regs;
+    },
+
     getType: function(op) {
         if (this.RType.indexOf(op) != -1) {
             return "R";
@@ -126,7 +138,7 @@ function Format(instr) {
     if (this.instr.indexOf('#') != -1) {
         this.instr = this.instr.slice(0, this.instr.indexOf('#') - 1)
     }
-    
+
     this.recognize();
     this.bit = this.getBits(this.type);
 
@@ -146,44 +158,45 @@ Format.prototype.recognize = function() {
 
     this.type = Registers.getType(this.op)
     if (this.type === "R") {
+        this.rd = null;
         this.rs = null;
         this.rt = null;
-        this.rd = null;
+
         this.shift = null;
         this.func = null;
 
-        this.rs = para.slice(0, para.indexOf(','))
-        this.rs = Registers.index(this.rs)
+        this.rd = para.slice(0, para.indexOf(','))
+        this.rd = Registers.index(this.rd)
         para = para.slice(para.indexOf(',') + 1)
 
-        this.rt = para.slice(0, para.indexOf(','))
-        this.rt = Registers.index(this.rt)
+        this.rs = para.slice(0, para.indexOf(','))
+        this.rs = Registers.index(this.rs)
         para = para.slice(para.indexOf(',') + 1)
 
 
         //Need to confirm which among rs, rt and rd to shift
         var a = Registers.parse(para)
-        this.rd = a[1]
+        this.rt = a[1]
         this.shift = a[0]
         this.func = this.op
 
     } else if (this.type === "I") {
-        this.rs = null;
         this.rt = null;
+        this.rs = null;
         this.add = null;
 
-        this.rs = para.slice(0, para.indexOf(','))
-        this.rs = Registers.index(this.rs)
+        this.rt = para.slice(0, para.indexOf(','))
+        this.rt = Registers.index(this.rt)
         para = para.slice(para.indexOf(',') + 1)
         if (para.indexOf(',') != -1) {
-            this.rt = para.slice(0, para.indexOf(','))
-            this.rt = Registers.index(this.rt)
+            this.rs = para.slice(0, para.indexOf(','))
+            this.rs = Registers.index(this.rs)
             para = para.slice(para.indexOf(',') + 1)
             this.add = +para
         } else {
-            this.rt = para
-            var a = Registers.parse(this.rt)
-            this.rt = a[1]
+            this.rs = para
+            var a = Registers.parse(this.rs)
+            this.rs = a[1]
             this.add = a[0]
         }
 
@@ -253,24 +266,45 @@ instruction = {operation:, rs:$2 rt:$sp,addr:}
 
 
 
-// function simulate(instr) {
-//     console.log(instr);
-//     if (instr.operation === "lw") {
-//         console.log("set ", instr.rs, r.get(instr.rt))
-//         r.set(instr.rs, r.get(instr.rt));
-//     } else if (instr.operation === "sw") {
-//         // console.log(instr.rt)
-//         r.set(instr.rt, r.get(instr.rs));
-//     } else if (instr.operation.indexOf("add") != -1) {
-//         r.set(instr.rs, r.get(instr.rt) + parseInt(instr.addr));
-//     } else {
-//         console.log("Irrecognizable operation")
-//     }
-// }
+/*
+    RType: ["add", "addu", "sub", "subu", "div", "divu", "jr", "and", "or"],
+    IType: ["addi", "addiu", "beq", "bne", "lw", "sw", "lui", "li"], //li is treated as lui
+    JType: ["j", "jal"],
+*/
 
-// console.log(r.values)
+function simulate(format) {
+    console.log("Simulate " + format.instr);
+    if (format.type === "R") {
+        if (format.op.indexOf("add") != -1) {
+            Registers.set(format.rd, Registers.get(format.rs) + (format.shift + Registers.get(format.rt)));
+        }
+    } else if (format.type === "I") {
+        console.log("I rt ", format.rs)
+        if (format.op === "lw" || format.op === "li" || format.op === "lui") {
+            Registers.set(format.rt, format.add + Registers.get(format.rs))
+        } else if (format.op === "sw") {
+            Registers.set(format.add + Registers.get(format.rs), format.rt)
+        } else if (format.op.indexOf("add") != -1) {
+            Registers.set(format.rt, Registers.get(format.rs) + format.add)
+        }
+    } else if (format.type === "J") {
 
-// simulate(arr[3])
-// console.log(r.values)
+    }
 
-// console.log(r.values)
+}
+
+console.log(Registers.getRegs())
+
+
+for (var i = 0; i < arr.length; i += 1) {
+    setTimeout(function(x) {
+        simulate(arr[x]);
+        console.log(Registers.getRegs());
+    }, i * 1000, i)
+}
+
+
+
+
+
+
