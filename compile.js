@@ -23,7 +23,7 @@ function digi(num, length) {
 
 
 /*
-Register
+Registers
 OpTable: instructions to opcoce
 FuncTable: instructions to functio code (for R type)
 index($sp): return the index of the register
@@ -293,18 +293,14 @@ function simulate(format) {
 
 }
 
-console.log(Registers.getRegs())
+//Simulate the registers
 
+// console.log(Registers.getRegs())
 
-for (var i = 0; i < arr.length; i += 1) {
-    setTimeout(function(x) {
-        simulate(arr[x]);
-        console.log(Registers.getRegs());
-    }, i * 1000, i)
-}
-
-
-
-
-
+// for (var i = 0; i < arr.length; i += 1) {
+//     setTimeout(function(x) {
+//         simulate(arr[x]);
+//         console.log(Registers.getRegs());
+//     }, i * 1000, i)
+// }
 
