@@ -1,0 +1,38 @@
+div.container{
+  box-sizing: border-box;
+  border: 5px solid #AAAAAA;
+}
+div.codeView {
+  float:left;
+  width: 30%;
+
+}
+div.codeContainer{
+  box-sizing: border-box;
+
+  border-bottom: 5px solid #AAAAAA;
+}
+div.svgContainer{
+  float: left;
+  width: 70%;
+  box-sizing: border-box;
+
+  border-left: 5px solid #AAAAAA;
+  /* padding: 1%; */
+}
+
+div.menuContainer{
+  padding: 10px;
+  box-sizing: border-box;
+
+  border-left: 5px solid #AAAAAA;
+  border-right: 5px solid #AAAAAA;
+
+  border-bottom: 5px solid #AAAAAA;
+
+}
+.container:after{
+  content: "";
+  display: table;
+  clear: both;
+}
