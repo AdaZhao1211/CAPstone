@@ -20,6 +20,13 @@ var RegisterFile = {
         console.log("A1, A2, A3, WD3, WE3, RD1, RD2")
         console.log(this.A1, this.A2, this.A3, this.WD3, this.WE3, this.RD1, this.RD2)
         console.log("----------")
+
+         var render_paths = {
+            PATH: [0,1,2],
+            POLY: []
+        }
+        return render_paths
+        
     }
 }
 
@@ -28,7 +35,7 @@ var DataMemory = {
     WD: null,
     WE: null,
     RD: null,
-    memory: {"100000":20},
+    memory: { "100000": 20 },
 
     clear: function() {
         this.A = null;
@@ -63,13 +70,45 @@ var DataMemory = {
         console.log("A, WD, WE, RD")
         console.log(this.A, this.WD, this.WE, this.RD)
         console.log("----------")
+
+        var render_paths = {
+            PATH: [],
+            POLY: []
+        }
+
+        if (this.WE == 1) {
+            render_paths.PATH = [10];
+            render_paths.POLY = [4]
+        } else if (this.WE == 0) {
+            render_paths.PATH = [9, 10];
+            render_paths.POLY = []
+        }
+
+        return render_paths;
     }
 
 }
 
-function SignExtend(num) {
+var SignExtend = {
     // TODO: sign extension
-    return num
+    input: null,
+    output: null,
+
+    set: function(num) {
+        this.input = num
+    },
+    run: function() {
+        this.output = this.input
+        return this.output
+    },
+
+    print: function() {
+        var render_paths = {
+            PATH: [5],
+            POLY: [2]
+        }
+        return render_paths;
+    }
 }
 
 
@@ -103,11 +142,17 @@ var ALU = {
 
     },
 
-    print:function(){
+    print: function() {
         console.log("ALU")
         console.log("sa, sb, control, output")
         console.log(this.sa, this.sb, this.control, this.output)
         console.log("----------")
+        var render_paths = {
+            PATH: [7, 8, 10],
+            POLY: []
+        }
+
+        return render_paths;
     }
 
 }
@@ -115,16 +160,22 @@ var ALU = {
 
 var MIPS = {
     //For lw
+    code: null,
     set: function(code) {
-
+        this.code = code
         RegisterFile.A1 = code.substring(6, 11)
         RegisterFile.A3 = code.substring(11, 16)
         RegisterFile.WE3 = 1;
 
-        RegisterFile.print()
+        // RegisterFile.print()
 
         ALU.sa = RegisterFile.A1;
-        ALU.sb = SignExtend(code.substring(16, 32))
+
+        SignExtend.set(code.substring(16, 32))
+
+        ALU.sb = SignExtend.run()
+
+        // ALU.sb = SignExtend(code.substring(16, 32))
         ALU.control = "010";
 
 
@@ -136,19 +187,63 @@ var MIPS = {
 
         RegisterFile.WD3 = DataMemory.run()
 
-        RegisterFile.print()
-        ALU.print()
-        DataMemory.print()
+        // RegisterFile.print()
+        // ALU.print()
+        // DataMemory.print()
     },
+
     run: function() {
+
+        resetPaths();
+
+        var paths = [];
+        var polys = [];
+
         RegisterFile.run()
+
         RegisterFile.print()
+
+        var result = RegisterFile.print();
+        paths = paths.concat(result.PATH);
+        polys = polys.concat(result.POLYS);
+
+        var result = ALU.print();
+        console.log(result.PATH)
+        paths = paths.concat(result.PATH);
+        polys = polys.concat(result.POLY);
+
+
+        var result = SignExtend.print();
+        paths = paths.concat(result.PATH);
+        polys = polys.concat(result.POLYS);
+
+        var result = DataMemory.print();
+        paths = paths.concat(result.PATH);
+        polys = polys.concat(result.POLYS);
+
+        console.log("PATHS", paths)
+        console.log("POLYS", polys)
+
+
+
+        for (var i = 0; i < paths.length; i++) {
+            console.log(paths[i])
+            renderDatapath(paths[i])
+        }
+
+
+        for (var i = 0; i < polys.length; i++) {
+            renderDatapathPoly(polys[i])
+        }
+
+
+        // RegisterFile.print()
     }
 }
 
 
-console.log("lw $2,8($fp)")
-console.log(Registers.values)
-MIPS.set("10001111110000100000000000000010")
-MIPS.run()
-console.log(Registers.values)
+// console.log("lw $2,8($fp)")
+// console.log(Registers.values)
+// MIPS.set("10001111110000100000000000000010")
+// MIPS.run()
+// console.log(Registers.values)
