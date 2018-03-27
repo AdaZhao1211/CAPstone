@@ -1,6 +1,6 @@
 function testButtonClicked(){
 
-  renderRegisterFile(3, 21);
+  //renderRegisterValues(3, 21);
 
 }
 
@@ -11,9 +11,12 @@ function assembleButtonClicked(){
 }
 
 function stepButtonClicked(){
-  var b = document.getElementById("square");
-  for(var i = 0; i <b.children.length; i++){
-    b.children[i].style.stroke = "red";
+  if(PROGRAM_COUNTER < arr.length){
+    simulate(arr[PROGRAM_COUNTER]);
+    renderRegisterValues(Registers.getRegs())
+    PROGRAM_COUNTER++;
+  }else{
+    alert("pc!")
   }
 }
 
@@ -56,8 +59,12 @@ function callAssemblyAPI(editorText){
     dataType:"json",
     data: JSON.stringify(myJSON),
     success: function(result){
+      //pru!
       console.log(result);
       console.log(result.asm);
+
+      arr = analyze(result, 2);
+      //ada display assembly code on screen
       var resultString = "";
       for(var i = 0; i < result.asm.length; i++){
         resultString +=result.asm[i].text;
@@ -73,6 +80,13 @@ function renderRegisterFile(registerNumber, registerValue){
   drawSVGRect(registerFile.x.animVal.value, registerFile.y.animVal.value, registerFile.width.animVal.value, registerFile.height.animVal.value);
   var registerDiv = $(".svgDiv").children()[registerNumber];
   registerDiv.innerHTML = registerValue;
+}
+
+function renderRegisterValues(registerValues){
+  var registerDiv = $(".svgDiv").children();
+  for(var i = 0; i < registerDiv.length; i++){
+    registerDiv[i].innerHTML = registerValues[i];
+  }
 }
 
 function SVG(tag) {
