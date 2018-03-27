@@ -248,9 +248,9 @@ function analyze(data, nbline) {
 }
 //Input:json compile data,line number
 //Output: analyzed instruction code
-arr = analyze(data, 3)
-console.log("Analyzed instructions")
-console.log(arr)
+// arr = analyze(data, 3)
+// console.log("Analyzed instructions")
+// console.log(arr)
 
 
 

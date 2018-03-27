@@ -93,40 +93,42 @@
 	<text transform="matrix(1 0 0 1 165.8405 122.2009)" font-family="'MyriadPro-BoldCond'" font-size="8.2245">5 : 0</text>
 </g>
 <g id="lines">
-	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="453.384,438.829 469.667,438.829
-		469.667,474.925 130.935,474.925 130.935,335.905 190.173,335.905 	"/>
-	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="109.471,256.9 157.676,256.9
-		157.676,104.125 	"/>
 
-		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="157.676" y1="257.866" x2="157.676" y2="519.496"/>
+		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="157.676" y1="255.833" x2="157.676" y2="519.496"/>
 
 		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="157.839" y1="252.881" x2="190.506" y2="252.881"/>
-	<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="158.066" y1="296.72" x2="190.506" y2="296.72"/>
-	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="791.256,369.996 816.839,369.996
-		816.839,557.669 107.295,557.669 107.791,376.012 190.051,375.898 	"/>
+		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="158.066" y1="296.72" x2="190.506" y2="296.72"/>
 
 		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="158.823" y1="452.932" x2="432.397" y2="452.932"/>
 
 		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="159.104" y1="430.481" x2="431.541" y2="430.406"/>
-	<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="157.27" y1="519.241" x2="187.169" y2="519.241"/>
+		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="157.27" y1="519.241" x2="187.169" y2="519.241"/>
 
 		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="410.691" y1="336.996" x2="470.363" y2="336.994"/>
 
 		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="410.764" y1="277.475" x2="522.724" y2="277.361"/>
-	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="450.696,337.18 450.696,384.171
-		622.501,384.12 	"/>
-	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="285.506,518.825 423.895,518.825
-		423.895,356.916 469.69,356.757 	"/>
 
 		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="489.764" y1="345.975" x2="522.506" y2="345.861"/>
-	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="572.865,316.434 596.944,316.434
-		596.839,237.862 737.068,237.862 737.178,360.336 770.006,360.333 	"/>
 
 		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="712.477" y1="383.484" x2="769.586" y2="383.535"/>
 
-		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="594.994" y1="316.526" x2="621.756" y2="316.414"/>
+		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="571.333" y1="316.526" x2="621.756" y2="316.414"/>
 
 		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="156.926" y1="104.635" x2="191.261" y2="104.635"/>
-	<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="157.277" y1="126.89" x2="191.428" y2="126.89"/>
+		<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" x1="157.277" y1="126.89" x2="191.428" y2="126.89"/>
+</g>
+<g id="polylines">
+	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="454.05,442.163 470.333,442.163
+		470.333,478.258 131.601,478.258 131.601,339.238 190.839,339.238 	"/>
+	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="791.923,373.329 817.506,373.329
+		817.506,561.003 107.962,561.003 108.458,379.345 190.717,379.231 	"/>
+	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="286.173,522.159 424.561,522.159
+		424.561,360.249 470.357,360.091 	"/>
+	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="572.199,316.434 596.277,316.434
+		596.173,237.862 736.402,237.862 736.511,360.336 769.339,360.333 	"/>
+	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="450.446,337.43 450.446,384.421
+		622.251,384.37 	"/>
+	<polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="109.437,256.487 157.643,256.487
+		157.643,103.713 	"/>
 </g>
 </svg>

@@ -1,6 +1,6 @@
 function testButtonClicked(){
 
-  //renderRegisterValues(3, 21);
+  renderDatapathPoly(3);
 
 }
 
@@ -89,6 +89,27 @@ function renderRegisterValues(registerValues){
   }
 }
 
+function renderDatapath(lineindex){
+  var datapath = $("#lines").children()[lineindex];
+  drawSVGLine(datapath.x1.animVal.value, datapath.y1.animVal.value, datapath.x2.animVal.value, datapath.y2.animVal.value)
+}
+
+function renderDatapathPoly(polyindex){
+  var datapath = $("#polylines").children()[polyindex].points;
+  //console.log(datapath);
+  var datapoints = '';
+  for(var i = 0; i<datapath.length; i++){
+    datapoints += datapath[i].x;
+    datapoints += ",";
+    datapoints += datapath[i].y;
+    datapoints += " ";
+  }
+  drawSVGPolyline(datapoints);
+  //drawSVGPolyline("20,30 400,200 300,100");
+
+
+}
+
 function SVG(tag) {
     return document.createElementNS('http://www.w3.org/2000/svg', tag);
 }
@@ -102,7 +123,32 @@ function drawSVGRect(x,y,w,h) {
             .attr('height', h)
             .attr('fill', "none")
             .attr('stroke', "red")
+            .attr('stroke-width', 3)
             .attr('stroke-miterlimit', 10)
+            .appendTo($svg);
+};
+
+function drawSVGPolyline(datapoints){
+  var $svg = $("#svgTemp");
+  $(SVG('polyline'))
+      .attr('points', datapoints)
+      .attr('stroke', "red")
+      .attr('stroke-width', 3)
+      .attr('fill', 'none')
+      .attr('stroke-miterlimit', 10)
+      .appendTo($svg);
+}
+
+function drawSVGLine(x1,y1,x2,y2) {
+        var $svg = $("#svgTemp");
+        $(SVG('line'))
+            .attr('x1', x1)
+            .attr('y1', y1)
+            .attr('x2', x2)
+            .attr('y2', y2)
+            .attr('stroke', "red")
+            .attr('stroke-miterlimit', 10)
+            .attr('stroke-width', 3)
             .appendTo($svg);
 };
 
