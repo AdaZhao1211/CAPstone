@@ -130,7 +130,7 @@ var Registers = {
 
 /*
 An object to simulate each instruction
-Format(String), 
+Format(String),
 */
 function Format(instr) {
     //instr: "  addiu $sp,$sp,-24"
@@ -259,7 +259,7 @@ console.log(arr)
 Simulate the output of the MIPS architecture
 
 instruction = {operation:, rs:$2 rt:$sp,addr:}
- case: lw 
+ case: lw
  registers[rs] = registers.get(rt)
 
 */
@@ -303,4 +303,3 @@ function simulate(format) {
 //         console.log(Registers.getRegs());
 //     }, i * 1000, i)
 // }
-

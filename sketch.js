@@ -69,11 +69,6 @@ function callAssemblyAPI(editorText){
 }
 
 function renderRegisterFile(registerNumber, registerValue){
-  var frame = $("#registerFrame").children()[0];
-  console.log(frame.width);
-  drawSVGRect(frame.x.animVal.value, frame.y.animVal.value, frame.width.animVal.value, frame.height.animVal.value);
-
-
   var registerFile = $("#registerFile").children()[registerNumber];
   drawSVGRect(registerFile.x.animVal.value, registerFile.y.animVal.value, registerFile.width.animVal.value, registerFile.height.animVal.value);
   var registerDiv = $(".svgDiv").children()[registerNumber];
