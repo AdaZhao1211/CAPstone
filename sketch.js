@@ -181,4 +181,6 @@ function resetRegisterDivs(){
 $(document).ready(function(){
   console.log("ready!");
   createRegisterDivs();
+
+
 })
