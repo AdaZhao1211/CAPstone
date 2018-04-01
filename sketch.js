@@ -1,5 +1,3 @@
-
-
 var instruction_micro = null;
 
 //Use for microstep 
@@ -28,44 +26,56 @@ function assembleButtonClicked() {
 }
 
 function stepButtonClicked() {
-    console.log(arr);
-    if (PROGRAM_COUNTER < arr.length) {
-        var changed_registers = simulate(arr[PROGRAM_COUNTER]);
+    // console.log(arr);
+    arr = analyzeall(data);
 
-        instruction_micro = arr[PROGRAM_COUNTER];
-        MIPS.set(instruction_micro.bit)
-
-        console.log("Step: ", instruction_micro.instr)
-        if(instruction_micro.op === "lw"){
-            console.log("Render: ",instruction_micro.instr)
-            testButtonClicked()
-        }
+    var i = 2;
+    console.log("instr:", arr[i].instr)
+    console.log("Format", arr[i])
+    MIPS.set(arr[i].bit)
+    MIPS.run()
+    MIPS.print()
 
 
-        var values = Registers.getRegs();
-        console.log(changed_registers)
-        console.log(changed_registers["READ"])
+    // if (PROGRAM_COUNTER < arr.length) {
+    //     var changed_registers = simulate(arr[PROGRAM_COUNTER]);
 
-        for (var i = 0; i < changed_registers.READ.length; i++) {
-            var index = changed_registers.READ[i]
-            //Ada TODO:  render changed_registers
-            renderRegisterFile(index, values[index])
-        }
+    //     instruction_micro = arr[PROGRAM_COUNTER];
+    //     // MIPS.set(instruction_micro.bit)
 
-        for (var i = 0; i < changed_registers.WRITE.length; i++) {
-            var index = changed_registers.WRITE[i]
-            //Ada TODO:  render changed_registers
-            renderRegisterFile(index, values[index])
-        }
 
-        // renderRegisterValues()
-        PROGRAM_COUNTER++;
-    } else {
-        alert("pc!")
-    }
+
+    //     // console.log("Step: ", instruction_micro.instr)
+    //     // if(instruction_micro.op === "lw"){
+    //     //     console.log("Render: ",instruction_micro.instr)
+    //     //     testButtonClicked()
+    //     // }
+
+
+    //     var values = Registers.getRegs();
+    //     console.log(changed_registers)
+    //     console.log(changed_registers["READ"])
+
+    //     for (var i = 0; i < changed_registers.READ.length; i++) {
+    //         var index = changed_registers.READ[i]
+    //         //Ada TODO:  render changed_registers
+    //         renderRegisterFile(index, values[index])
+    //     }
+
+    //     for (var i = 0; i < changed_registers.WRITE.length; i++) {
+    //         var index = changed_registers.WRITE[i]
+    //         //Ada TODO:  render changed_registers
+    //         renderRegisterFile(index, values[index])
+    //     }
+
+    //     // renderRegisterValues()
+    //     PROGRAM_COUNTER++;
+    // } else {
+    //     alert("pc!")
+    // }
 }
 
-function resetPaths(){
+function resetPaths() {
     // Reset paths
     $("#svgTemp").children().remove();
 }
@@ -189,28 +199,28 @@ function drawSVGRect(x, y, w, h) {
         .appendTo($svg);
 };
 
-function drawSVGPolyline(datapoints){
-  var $svg = $("#svgTemp");
-  $(SVG('polyline'))
-      .attr('points', datapoints)
-      .attr('stroke', "red")
-      .attr('stroke-width', 3)
-      .attr('fill', 'none')
-      .attr('stroke-miterlimit', 10)
-      .appendTo($svg);
+function drawSVGPolyline(datapoints) {
+    var $svg = $("#svgTemp");
+    $(SVG('polyline'))
+        .attr('points', datapoints)
+        .attr('stroke', "red")
+        .attr('stroke-width', 3)
+        .attr('fill', 'none')
+        .attr('stroke-miterlimit', 10)
+        .appendTo($svg);
 }
 
-function drawSVGLine(x1,y1,x2,y2) {
-        var $svg = $("#svgTemp");
-        $(SVG('line'))
-            .attr('x1', x1)
-            .attr('y1', y1)
-            .attr('x2', x2)
-            .attr('y2', y2)
-            .attr('stroke', "red")
-            .attr('stroke-miterlimit', 10)
-            .attr('stroke-width', 3)
-            .appendTo($svg);
+function drawSVGLine(x1, y1, x2, y2) {
+    var $svg = $("#svgTemp");
+    $(SVG('line'))
+        .attr('x1', x1)
+        .attr('y1', y1)
+        .attr('x2', x2)
+        .attr('y2', y2)
+        .attr('stroke', "red")
+        .attr('stroke-miterlimit', 10)
+        .attr('stroke-width', 3)
+        .appendTo($svg);
 };
 
 

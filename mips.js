@@ -1,3 +1,8 @@
+String.prototype.getbit = function(st, ed) {
+    return this.substring(31 - st, 32 - ed);
+}
+
+
 var RegisterFile = {
     A1: null,
     A2: null,
@@ -7,11 +12,44 @@ var RegisterFile = {
     RD1: null,
     RD2: null,
 
-    run: function() {
+    set: function(prop, val) {
+        //TODO:optimization and dynamics
+        var flag = false;
+        if (["A1", "A2", "A3", "WD3", "WE3"].indexOf(prop) != -1) {
+            this[prop] = val;
+            if (prop != "WD3" & prop != "WE3") {
+                flag = true;
+            }
+        }
+
+        //If valid change, update output
+        if (flag) {
+            this.update();
+        }
+    },
+
+    update: function() {
         this.RD1 = Registers.get(parseInt(this.A1, 2));
         this.RD2 = Registers.get(parseInt(this.A2, 2));
+        if (this.RD2 != undefined) {
+            MUX2.set("D0", this.RD2);
+        }
+        if (this.RD1 != undefined) {
+            ALU.set("sa", this.RD1);
+        }
+        if (this.RD2 != undefined) {
+            DataMemory.set("WD", this.RD2);
+        }
 
-        this.A3 = parseInt(this.A3, 2);
+
+    },
+
+    run: function() {
+        // this.RD1 = Registers.get(parseInt(this.A1, 2));
+        // this.RD2 = Registers.get(parseInt(this.A2, 2));
+        if (!Number.isInteger(this.A3)) {
+            this.A3 = parseInt(this.A3, 2);
+        }
         if (this.WE3 == 1) {
             //RegWrite
             Registers.set(this.A3, this.WD3);
@@ -52,11 +90,32 @@ var DataMemory = {
         this.RD = null;
 
     },
-    set: function(A, WD, WE) {
-        this.A = A;
-        this.WD = WD;
-        this.WE = WE;
+
+    set: function(prop, val) {
+        var flag = false;
+        if (["A", "WD", "WE"].indexOf(prop) != -1) {
+            DataMemory[prop] = val;
+            if (prop == "A") {
+                flag = true;
+
+            }
+        }
+        if (flag) {
+            DataMemory.update()
+        }
+
     },
+
+    update: function() {
+        this.RD = this.A;
+        MUX3.set("D1", this.RD)
+    },
+
+    // set: function(A, WD, WE) {
+    //     this.A = A;
+    //     this.WD = WD;
+    //     this.WE = WE;
+    // },
 
     run: function() {
         if (this.WE == 1) {
@@ -104,6 +163,11 @@ var SignExtend = {
 
     set: function(num) {
         this.input = num
+        this.update()
+    },
+    update: function() {
+        this.output = this.input
+        MUX2.set("D1", this.output)
     },
     run: function() {
         this.output = this.input
@@ -137,12 +201,51 @@ var ControlUnit = {
     ALUControl: null,
 
     setALUCon: function(func) {
-        return "";
-    }
+        this.opcode = String(this.opcode)
+        var aluop = String(digi(this.opcode.getbit(1, 0), 2))
+        if (aluop == "00") {
+            //add
+            return "010";
+        } else if (aluop.charAt(1) == "1") {
+            //substract
+            return "110";
+        } else if (aluop.charAt(1) == "0") {
+            if (func == "100000") {
+                //add
+                return "010"
+            } else if (func == "100010") {
+                //substract
+                return "110"
+            } else if (func == "100100") {
+                //and
+                return "000"
+            } else if (func == "100101") {
+                //or
+                return "001"
+            } else if (func == "101010") {
+                //slt
+                return "111"
+            }
+        }
+        return null;
+    },
 
     set: function(opcode, func) {
         this.opcode = opcode;
         this.func = func;
+        this.run();
+        this.update();
+
+    },
+
+    update: function() {
+        RegisterFile.set("WE3", this.RegWrite);
+        MUX1.set("S", this.RegDst);
+        MUX2.set("S", this.ALUSrc);
+        this.ALUControl = this.setALUCon(this.func);
+        ALU.set("control", this.ALUControl)
+        DataMemory.set("WE", this.MemWrite)
+        MUX3.set("S", this.MemtoReg)
 
     },
 
@@ -158,7 +261,7 @@ var ControlUnit = {
             this.Jump = 0;
             this.ALUControl = this.setALUCon(this.func)
 
-        }else if(this.opcode === "100011"){
+        } else if (this.opcode === "100011") {
             //lw
             this.RegWrite = 1;
             this.RegDst = 0;
@@ -169,7 +272,7 @@ var ControlUnit = {
             this.ALUOp = "00";
             this.Jump = 0;
             this.ALUControl = this.setALUCon(this.func)
-        }else if(this.opcode === "101011"){
+        } else if (this.opcode === "101011") {
             //sw
             this.RegWrite = 0;
             this.RegDst = null;
@@ -180,7 +283,7 @@ var ControlUnit = {
             this.ALUOp = "00";
             this.Jump = 0;
             this.ALUControl = this.setALUCon(this.func)
-        }else if(this.opcode === "000100"){
+        } else if (this.opcode === "000100") {
             //beq
             this.RegWrite = 0;
             this.RegDst = null;
@@ -191,7 +294,7 @@ var ControlUnit = {
             this.ALUOp = "01";
             this.Jump = 0;
             this.ALUControl = this.setALUCon(this.func)
-        }else if(this.opcode === "001000"){
+        } else if (this.opcode === "001000") {
             //addi
             this.RegWrite = 1;
             this.RegDst = 0;
@@ -202,7 +305,7 @@ var ControlUnit = {
             this.ALUOp = "00";
             this.Jump = 0;
             this.ALUControl = this.setALUCon(this.func)
-        }else if(this.opcode === "000010"){
+        } else if (this.opcode === "000010") {
             //j
             this.RegWrite = 0;
             this.RegDst = null;
@@ -214,38 +317,136 @@ var ControlUnit = {
             this.Jump = 1;
             this.ALUControl = this.setALUCon(this.func)
         }
+
+    },
+    print: function() {
+        console.log("Control Unit");
+        console.log(this)
+        console.log("----------")
     }
 }
 
-function Multiplexer(){
+function Multiplexer() {
     this.D0 = null;
     this.D1 = null;
     this.S = null;
     this.Y = null;
+    this.subject = {}; //Output Components:Ports
 }
-Multiplexer.prototype.run = function(){
-    if(this.S == 0){
-        return this.D0;
-    }else if(this.S == 1){
-        return this.D1;
+
+Multiplexer.prototype.set = function(prop, val) {
+    //TODO:optimization and dynamics
+    var flag = false;
+
+    if (["D0", "D1", "S"].indexOf(prop) != -1) {
+        this[prop] = val;
+        flag = true;
     }
+
+    // if (prop === "D0") {
+    //     this.D0 = val;
+    //     flag = true;
+    // } else if (prop === "D1") {
+    //     this.D1 = val;
+    //     flag = true;
+    // } else if (prop === "S") {
+    //     this.S = val;
+    //     flag = true;
+    // }
+
+    //If valid change, update output
+    if (flag) {
+        this.update();
+    }
+}
+
+Multiplexer.prototype.update = function() {
+    var output = null;
+    if (!Number.isInteger(this.D0)) {
+        this.D0 = parseInt(this.D0, 2)
+    }
+    if (!Number.isInteger(this.D1)) {
+        this.D1 = parseInt(this.D1, 2)
+    }
+
+    // this.D1 = parseInt(this.D1,2)
+    if (this.S == 0) {
+        output = this.D0;
+    } else if (this.S == 1) {
+        output = this.D1;
+    } else {
+        //If S == null
+        output = 0;
+    }
+    this.Y = output
+    // if (this.S != null) {
+
+        for (var key in this.subject) {
+            // console.log(key)
+            if (key == "RegisterFile") {
+                RegisterFile.set(this.subject[key], this.Y)
+            } else if (key == "ALU") {
+                // console.log(this)
+                ALU.set(this.subject[key], this.Y)
+            }
+        }
+    // }
+    return output;
+
+
+}
+
+Multiplexer.prototype.print = function() {
+    console.log("Multiplexer")
+    console.log(this)
+    console.log("----------")
 }
 
 var MUX1 = new Multiplexer()
 var MUX2 = new Multiplexer()
 var MUX3 = new Multiplexer()
 
+MUX1.subject = { RegisterFile: "A3" }
+MUX2.subject = { ALU: "sb" }
+MUX3.subject = { RegisterFile: "WD3" }
+
+
 
 var ALU = {
-    sa: null,
-    sb: null,
-    control: null,
-    zero: null,
-    output: null,
+    sa: undefined,
+    sb: undefined,
+    control: undefined,
+    zero: undefined,
+    output: undefined,
+
+    set: function(prop, val) {
+        if (["sa", "sb", "control"].indexOf(prop) != -1) {
+            this[prop] = val;
+            this.update();
+        }
+    },
+
+    update: function() {
+        var r = this.run();
+        if (r != null) {
+            DataMemory.set("A", this.output)
+            MUX3.set("D0", this.output)
+        }
+
+    },
 
     run: function() {
-        this.sa = parseInt(this.sa, 2)
-        this.sb = parseInt(this.sb, 2)
+        // console.log("sa sb", this.sa, this.sb)
+        if (this.sa == undefined || this.sb == undefined || this.control == undefined) {
+            return null
+        }
+        if (!Number.isInteger(this.sa)) {
+            this.sa = parseInt(this.sa, 2)
+        }
+        if (!Number.isInteger(this.sb)) {
+            this.sb = parseInt(this.sb, 2)
+        }
+        // this.sb = parseInt(this.sb, 2)
         if (this.control === "000") {
             //AND
             this.output = this.sa & this.sb;
@@ -262,6 +463,9 @@ var ALU = {
             this.output = (this.sa < this.sb) ? 1 : 0
         }
         this.zero = (this.output == 0)
+        if (this.output == undefined) {
+            return undefined
+        }
         return this.output.toString(2);
 
     },
@@ -285,84 +489,122 @@ var ALU = {
 var MIPS = {
     //For lw
     code: null,
+
+
     set: function(code) {
-        this.code = code
-        RegisterFile.A1 = code.substring(6, 11)
-        RegisterFile.A3 = code.substring(11, 16)
-        RegisterFile.WE3 = 1;
+        code = String(code);
+        this.code = code;
+        console.log(code)
+        ControlUnit.set(code.getbit(31, 26), code.getbit(5, 0))
 
-        // RegisterFile.print()
+        RegisterFile.set("A1", code.getbit(25, 21));
+        RegisterFile.set("A2", code.getbit(20, 16));
 
-        ALU.sa = RegisterFile.A1;
+        MUX1.set("D0", code.getbit(20, 16));
+        MUX1.set("D1", code.getbit(15, 11));
 
-        SignExtend.set(code.substring(16, 32))
-
-        ALU.sb = SignExtend.run()
-
-        // ALU.sb = SignExtend(code.substring(16, 32))
-        ALU.control = "010";
+        SignExtend.set(code.getbit(15, 0));
 
 
-
-        DataMemory.WE = 0
-        DataMemory.A = ALU.run()
-
-        ALU.print()
-
-        RegisterFile.WD3 = DataMemory.run()
-
-        // RegisterFile.print()
-        // ALU.print()
-        // DataMemory.print()
     },
 
     run: function() {
-
-        resetPaths();
-
-        var paths = [];
-        var polys = [];
-
         RegisterFile.run()
+        DataMemory.run()
 
+    },
+
+    print: function() {
+        ControlUnit.print()
         RegisterFile.print()
-
-        var result = RegisterFile.print();
-        paths = paths.concat(result.PATH);
-        polys = polys.concat(result.POLYS);
-
-        var result = ALU.print();
-        console.log(result.PATH)
-        paths = paths.concat(result.PATH);
-        polys = polys.concat(result.POLY);
-
-
-        var result = SignExtend.print();
-        paths = paths.concat(result.PATH);
-        polys = polys.concat(result.POLYS);
-
-        var result = DataMemory.print();
-        paths = paths.concat(result.PATH);
-        polys = polys.concat(result.POLYS);
-
-        console.log("PATHS", paths)
-        console.log("POLYS", polys)
-
-
-
-        for (var i = 0; i < paths.length; i++) {
-            console.log(paths[i])
-            renderDatapath(paths[i])
-        }
-
-
-        for (var i = 0; i < polys.length; i++) {
-            renderDatapathPoly(polys[i])
-        }
-
-
-        // RegisterFile.print()
+        MUX1.print()
+        MUX2.print()
+        ALU.print()
+        DataMemory.print()
+        MUX3.print()
+        console.log(Registers.getRegs())
+        console.log(DataMemory.memory)
     }
+
+
+    // set: function(code) {
+    //     this.code = code
+    //     RegisterFile.A1 = code.substring(6, 11)
+    //     RegisterFile.A3 = code.substring(11, 16)
+    //     RegisterFile.WE3 = 1;
+
+    //     // RegisterFile.print()
+
+    //     ALU.sa = RegisterFile.A1;
+
+    //     SignExtend.set(code.substring(16, 32))
+
+    //     ALU.sb = SignExtend.run()
+
+    //     // ALU.sb = SignExtend(code.substring(16, 32))
+    //     ALU.control = "010";
+
+
+
+    //     DataMemory.WE = 0
+    //     DataMemory.A = ALU.run()
+
+    //     ALU.print()
+
+    //     RegisterFile.WD3 = DataMemory.run()
+
+    //     // RegisterFile.print()
+    //     // ALU.print()
+    //     // DataMemory.print()
+    // },
+
+    // run: function() {
+
+    //     resetPaths();
+
+    //     var paths = [];
+    //     var polys = [];
+
+    //     RegisterFile.run()
+
+    //     RegisterFile.print()
+
+    //     var result = RegisterFile.print();
+    //     paths = paths.concat(result.PATH);
+    //     polys = polys.concat(result.POLYS);
+
+    //     var result = ALU.print();
+    //     console.log(result.PATH)
+    //     paths = paths.concat(result.PATH);
+    //     polys = polys.concat(result.POLY);
+
+
+    //     var result = SignExtend.print();
+    //     paths = paths.concat(result.PATH);
+    //     polys = polys.concat(result.POLYS);
+
+    //     var result = DataMemory.print();
+    //     paths = paths.concat(result.PATH);
+    //     polys = polys.concat(result.POLYS);
+
+    //     console.log("PATHS", paths)
+    //     console.log("POLYS", polys)
+
+
+
+    //     for (var i = 0; i < paths.length; i++) {
+    //         console.log(paths[i])
+    //         renderDatapath(paths[i])
+    //     }
+
+
+    //     for (var i = 0; i < polys.length; i++) {
+    //         renderDatapathPoly(polys[i])
+    //     }
+
+
+
+    // }
 }
 
 

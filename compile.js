@@ -39,7 +39,7 @@ getOpcode(instr): return opcode according to the instruction
 */
 var Registers = {
     // "use strict";
-    values: [0, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3],
+    values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 0, 0, 0, 0, 0],
 
     table: ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3",
         "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
@@ -48,8 +48,8 @@ var Registers = {
         "$k0", "$k1", "$gp", "$sp", "$fp", "$ra"
     ],
 
-    RType: ["add", "addu", "sub", "subu", "div", "divu", "jr", "and", "or"],
-    IType: ["move", "addi", "addiu", "beq", "bne", "lw", "sw", "lui", "li"], //li is treated as lui
+    RType: ["move","add", "addu", "sub", "subu", "div", "divu", "jr", "and", "or"],
+    IType: [ "addi", "addiu", "beq", "bne", "lw", "sw", "lui", "li"], //li is treated as lui
     JType: ["j", "jal"],
 
     OpTable: {
@@ -62,6 +62,7 @@ var Registers = {
     },
 
     FuncTable: {
+        "move": 0x20,
         "add": 0x20,
         "addu": 0x21,
         "and": 0x24,
@@ -208,7 +209,6 @@ Format.prototype.recognize = function() {
 
     } else if (this.type === "J") {
         this.add = Registers.index(para)
-
         console.log("Add", this.add)
     }
 
@@ -263,7 +263,7 @@ function analyzeall(data) {
     for (var i = 0; i < data.asm.length; i++) {
         if (data.asm[i].source != null &&
             data.asm[i].text.indexOf(':') == -1) {
-            console.log(data.asm[i].text)
+            // console.log(data.asm[i].text)
             var f = new Format(data.asm[i].text);
             arr.push(f);
         }
@@ -278,8 +278,8 @@ function analyzeall(data) {
 // arr = analyze(data, 1)
 
 console.log("Analyzed instructions")
-// arr = analyzeall(data);
-// console.log(arr)
+arr = analyzeall(data);
+console.log(arr)
 
 
 
@@ -321,7 +321,8 @@ function simulate(format) {
             Registers.set(format.add + Registers.get(format.rs), format.rt)
         } else if (format.op.indexOf("add") != -1) {
             Registers.set(format.rt, Registers.get(format.rs) + format.add)
-        } else if (format.op === "move") {
+        } 
+        else if (format.op === "move") {
             Registers.set(format.rt, Registers.get(format.rs))
         }
 
@@ -346,15 +347,15 @@ function simulate(format) {
 // console.log(Registers.getRegs())
 // for (var i = 0; i < arr.length; i += 1) {
 
-    // setTimeout(function(x) {
+// setTimeout(function(x) {
 
 
-        // var change = simulate(arr[i]);
+// var change = simulate(arr[i]);
 
 
 
 
-        // console.log(change);
-        // console.log(Registers.getRegs());
-    // }, i * 1000, i)
+// console.log(change);
+// console.log(Registers.getRegs());
+// }, i * 1000, i)
 // }
