@@ -48,12 +48,13 @@ var Registers = {
         "$k0", "$k1", "$gp", "$sp", "$fp", "$ra"
     ],
 
-    RType: ["move","add", "addu", "sub", "subu", "div", "divu", "jr", "and", "or"],
-    IType: [ "addi", "addiu", "beq", "bne", "lw", "sw", "lui", "li"], //li is treated as lui
+    RType: ["move", "add", "addu", "sub", "subu", "div", "divu", "jr", "and", "or"],
+    IType: ["addi", "addiu", "beq", "bne", "lw", "sw", "lui", "li"], //li is treated as lui
     JType: ["j", "jal"],
 
     OpTable: {
         "addiu": 0x09,
+        "li": 0x23,
         "lw": 0x23,
         "sw": 0x2B,
         "lui": 0x0F,
@@ -321,8 +322,7 @@ function simulate(format) {
             Registers.set(format.add + Registers.get(format.rs), format.rt)
         } else if (format.op.indexOf("add") != -1) {
             Registers.set(format.rt, Registers.get(format.rs) + format.add)
-        }
-        else if (format.op === "move") {
+        } else if (format.op === "move") {
             Registers.set(format.rt, Registers.get(format.rs))
         }
 

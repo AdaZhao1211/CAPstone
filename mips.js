@@ -381,15 +381,15 @@ Multiplexer.prototype.update = function() {
     this.Y = output
     // if (this.S != null) {
 
-        for (var key in this.subject) {
-            // console.log(key)
-            if (key == "RegisterFile") {
-                RegisterFile.set(this.subject[key], this.Y)
-            } else if (key == "ALU") {
-                // console.log(this)
-                ALU.set(this.subject[key], this.Y)
-            }
+    for (var key in this.subject) {
+        // console.log(key)
+        if (key == "RegisterFile") {
+            RegisterFile.set(this.subject[key], this.Y)
+        } else if (key == "ALU") {
+            // console.log(this)
+            ALU.set(this.subject[key], this.Y)
         }
+    }
     // }
     return output;
 
@@ -524,6 +524,58 @@ var MIPS = {
         MUX3.print()
         console.log(Registers.getRegs())
         console.log(DataMemory.memory)
+    },
+
+    render: function() {
+        var paths = [];
+        paths.push(5);
+        if (MUX3.S != null && MUX3.S != undefined){
+            paths.push(101);
+            if(MUX3.S == 0){
+                paths.push(103)
+
+            }else if(MUX3.S == 1){
+                paths.push(3)
+                paths.push(4)
+            }
+        }
+
+
+        
+        if(DataMemory.WE == 1){
+            paths.push(104)
+            paths.push(4)
+        }
+        paths.push(1)
+        paths.push(2)
+        if(MUX2.S == 0){
+            paths.push(0)
+        }else if(MUX2.S == 1){
+            paths.push(102)
+            paths.push(110)
+        }
+        if (MUX1.S != null && MUX1.S != undefined){
+            paths.push(100);
+            if(MUX1.S == 0){
+                paths.push(108)
+            }else if(MUX1.S == 1){
+                paths.push(109)
+            }
+        }
+        if(RegisterFile.WE == 0){
+            if(paths.indexOf(100)!=-1){
+                paths.splice(paths.indexOf(100),1)
+            }
+            if(paths.indexOf(101) == 0){
+                paths.splice(paths.indexOf(101),1)
+            }
+        }
+        paths.push(105)
+        paths.push(106)
+        paths.push(6)
+        return paths
+
+
     }
 
 
