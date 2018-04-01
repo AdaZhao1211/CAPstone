@@ -81,11 +81,11 @@ function callAssemblyAPI(editorText) {
         dataType: "json",
         data: JSON.stringify(myJSON),
         success: function(result) {
-            //pru!
-            console.log(result);
-            console.log(result.asm);
+            //pru
+            // console.log(result);
+            // console.log(result.asm);
+            // arr = analyze(result, 2);
 
-            arr = analyze(result, 2);
             //ada display assembly code on screen
             var resultString = "";
             for (var i = 0; i < result.asm.length; i++) {
@@ -93,6 +93,9 @@ function callAssemblyAPI(editorText) {
                 resultString += "\n";
             }
             assemblyEditor.setValue(resultString);
+            
+            //pru
+            arr = analyzeall(result);
         }
     })
 }
