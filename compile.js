@@ -321,7 +321,7 @@ function simulate(format) {
             Registers.set(format.add + Registers.get(format.rs), format.rt)
         } else if (format.op.indexOf("add") != -1) {
             Registers.set(format.rt, Registers.get(format.rs) + format.add)
-        } 
+        }
         else if (format.op === "move") {
             Registers.set(format.rt, Registers.get(format.rs))
         }

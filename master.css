@@ -36,3 +36,19 @@ div.menuContainer{
   display: table;
   clear: both;
 }
+
+div.svgImage{
+  position: relative;
+}
+
+div.microarchitecture{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.gate{
+  z-index: 1;
+}

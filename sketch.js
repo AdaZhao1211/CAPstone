@@ -1,6 +1,6 @@
 var instruction_micro = null;
 
-//Use for microstep 
+//Use for microstep
 function testButtonClicked() {
     //renderRegisterValues(3, 21);
     // for(var i = 0; i<arr.length; i++){
@@ -16,6 +16,7 @@ function testButtonClicked() {
 
     MIPS.run();
 
+  renderDatapathPoly(3);
 
 }
 
@@ -180,65 +181,83 @@ function renderDatapathPoly(polyindex) {
 
 }
 
+function renderDatapath(lineindex){
+  var datapath = $("#lines").children()[lineindex];
+  drawSVGLine(datapath.x1.animVal.value, datapath.y1.animVal.value, datapath.x2.animVal.value, datapath.y2.animVal.value)
+}
 
+function renderDatapathPoly(polyindex){
+  var datapath = $("#polylines").children()[polyindex].points;
+  //console.log(datapath);
+  var datapoints = '';
+  for(var i = 0; i<datapath.length; i++){
+    datapoints += datapath[i].x;
+    datapoints += ",";
+    datapoints += datapath[i].y;
+    datapoints += " ";
+  }
+  drawSVGPolyline(datapoints);
+  //drawSVGPolyline("20,30 400,200 300,100");
+
+
+}
 
 function SVG(tag) {
     return document.createElementNS('http://www.w3.org/2000/svg', tag);
 }
 
-function drawSVGRect(x, y, w, h) {
-    var $svg = $("#svgTemp");
-    $(SVG('rect'))
-        .attr('x', x)
-        .attr('y', y)
-        .attr('width', w)
-        .attr('height', h)
-        .attr('fill', "none")
-        .attr('stroke', "red")
-        .attr('stroke-miterlimit', 10)
-        .appendTo($svg);
+function drawSVGRect(x,y,w,h) {
+        var $svg = $("#svgTemp");
+        $(SVG('rect'))
+            .attr('x', x)
+            .attr('y', y)
+            .attr('width', w)
+            .attr('height', h)
+            .attr('fill', "none")
+            .attr('stroke', "red")
+            .attr('stroke-width', 3)
+            .attr('stroke-miterlimit', 10)
+            .appendTo($svg);
 };
 
-function drawSVGPolyline(datapoints) {
-    var $svg = $("#svgTemp");
-    $(SVG('polyline'))
-        .attr('points', datapoints)
-        .attr('stroke', "red")
-        .attr('stroke-width', 3)
-        .attr('fill', 'none')
-        .attr('stroke-miterlimit', 10)
-        .appendTo($svg);
+function drawSVGPolyline(datapoints){
+  var $svg = $("#svgTemp");
+  $(SVG('polyline'))
+      .attr('points', datapoints)
+      .attr('stroke', "red")
+      .attr('stroke-width', 3)
+      .attr('fill', 'none')
+      .attr('stroke-miterlimit', 10)
+      .appendTo($svg);
 }
 
-function drawSVGLine(x1, y1, x2, y2) {
-    var $svg = $("#svgTemp");
-    $(SVG('line'))
-        .attr('x1', x1)
-        .attr('y1', y1)
-        .attr('x2', x2)
-        .attr('y2', y2)
-        .attr('stroke', "red")
-        .attr('stroke-miterlimit', 10)
-        .attr('stroke-width', 3)
-        .appendTo($svg);
+function drawSVGLine(x1,y1,x2,y2) {
+        var $svg = $("#svgTemp");
+        $(SVG('line'))
+            .attr('x1', x1)
+            .attr('y1', y1)
+            .attr('x2', x2)
+            .attr('y2', y2)
+            .attr('stroke', "red")
+            .attr('stroke-miterlimit', 10)
+            .attr('stroke-width', 3)
+            .appendTo($svg);
 };
 
-
-function createRegisterDivs() {
-    var registerFile = document.getElementById("registerFile");
-    var startX = $(window).width() * 0.3 + 10 + registerFile.children[0].x.animVal.value;
-    var startY = 62 + registerFile.children[0].y.animVal.value;
-    var svgContainer = $(".svgDiv");
-    for (var i = 7; i >= 0; i--) {
-        for (var j = 3; j >= 0; j--) {
-            var myX = startX + j * 40;
-            var myY = startY + i * 20;
-            $("<div/>", {
-                "class": "register",
-                text: "000",
-                style: "position:absolute; left:" + myX + "px; top:" + myY + "px; width:30px;"
-            }).prependTo(svgContainer);
-        }
+function createRegisterDivs(){
+  var registerFile = document.getElementById("registerFile");
+  var startX = $( window ).width()*0.3 + 10+registerFile.children[0].x.animVal.value;
+  var startY = 62+registerFile.children[0].y.animVal.value;
+  var svgContainer = $(".svgDiv");
+  for(var i = 7; i >= 0; i--){
+    for(var j = 3; j >= 0; j--){
+      var myX = startX + j*40;
+      var myY = startY + i*20;
+      $("<div/>",{
+        "class": "register",
+        text: "000",
+        style: "position:absolute; left:"+myX+"px; top:"+myY+"px; width:30px;"
+      }).prependTo(svgContainer);
     }
 }
 
