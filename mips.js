@@ -8,6 +8,9 @@ var RegisterFile = {
     RD2: null,
 
     run: function() {
+        this.RD1 = Registers.get(parseInt(this.A1, 2));
+        this.RD2 = Registers.get(parseInt(this.A2, 2));
+
         this.A3 = parseInt(this.A3, 2);
         if (this.WE3 == 1) {
             //RegWrite
@@ -21,12 +24,17 @@ var RegisterFile = {
         console.log(this.A1, this.A2, this.A3, this.WD3, this.WE3, this.RD1, this.RD2)
         console.log("----------")
 
-         var render_paths = {
-            PATH: [0,1,2],
+        var render_paths = {
+            PATH: [0, 1, 2],
             POLY: []
         }
-        return render_paths
-        
+
+        if (this.WE3 == 1) {
+            //Light up write path
+        }
+
+        return render_paths;
+
     }
 }
 
@@ -110,6 +118,122 @@ var SignExtend = {
         return render_paths;
     }
 }
+
+
+var ControlUnit = {
+    //Inputs
+    opcode: null,
+    func: null,
+
+    //Outputs
+    RegWrite: null,
+    RegDst: null,
+    ALUSrc: null,
+    Branch: null,
+    MemWrite: null,
+    MemtoReg: null,
+    ALUOp: null,
+    Jump: null,
+    ALUControl: null,
+
+    setALUCon: function(func) {
+        return "";
+    }
+
+    set: function(opcode, func) {
+        this.opcode = opcode;
+        this.func = func;
+
+    },
+
+    run: function() {
+        if (this.opcode === "000000") {
+            this.RegWrite = 1;
+            this.RegDst = 1;
+            this.ALUSrc = 0;
+            this.Branch = 0;
+            this.MemWrite = 0;
+            this.MemtoReg = 0;
+            this.ALUOp = "10";
+            this.Jump = 0;
+            this.ALUControl = this.setALUCon(this.func)
+
+        }else if(this.opcode === "100011"){
+            //lw
+            this.RegWrite = 1;
+            this.RegDst = 0;
+            this.ALUSrc = 1;
+            this.Branch = 0;
+            this.MemWrite = 0;
+            this.MemtoReg = 1;
+            this.ALUOp = "00";
+            this.Jump = 0;
+            this.ALUControl = this.setALUCon(this.func)
+        }else if(this.opcode === "101011"){
+            //sw
+            this.RegWrite = 0;
+            this.RegDst = null;
+            this.ALUSrc = 1;
+            this.Branch = 0;
+            this.MemWrite = 1;
+            this.MemtoReg = null;
+            this.ALUOp = "00";
+            this.Jump = 0;
+            this.ALUControl = this.setALUCon(this.func)
+        }else if(this.opcode === "000100"){
+            //beq
+            this.RegWrite = 0;
+            this.RegDst = null;
+            this.ALUSrc = 0;
+            this.Branch = 1;
+            this.MemWrite = 0;
+            this.MemtoReg = null;
+            this.ALUOp = "01";
+            this.Jump = 0;
+            this.ALUControl = this.setALUCon(this.func)
+        }else if(this.opcode === "001000"){
+            //addi
+            this.RegWrite = 1;
+            this.RegDst = 0;
+            this.ALUSrc = 1;
+            this.Branch = 0;
+            this.MemWrite = 0;
+            this.MemtoReg = 0;
+            this.ALUOp = "00";
+            this.Jump = 0;
+            this.ALUControl = this.setALUCon(this.func)
+        }else if(this.opcode === "000010"){
+            //j
+            this.RegWrite = 0;
+            this.RegDst = null;
+            this.ALUSrc = null;
+            this.Branch = null;
+            this.MemWrite = 0;
+            this.MemtoReg = null;
+            this.ALUOp = null;
+            this.Jump = 1;
+            this.ALUControl = this.setALUCon(this.func)
+        }
+    }
+}
+
+function Multiplexer(){
+    this.D0 = null;
+    this.D1 = null;
+    this.S = null;
+    this.Y = null;
+}
+Multiplexer.prototype.run = function(){
+    if(this.S == 0){
+        return this.D0;
+    }else if(this.S == 1){
+        return this.D1;
+    }
+}
+
+var MUX1 = new Multiplexer()
+var MUX2 = new Multiplexer()
+var MUX3 = new Multiplexer()
 
 
 var ALU = {
