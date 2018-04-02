@@ -1,9 +1,9 @@
 function testButtonClicked() {
-
+  renderCUValues([0, 0, 0, 0, 0, 0, 0]);
     // renderDatapath([3, 102]);
-    resetButtonClicked()
+    //resetButtonClicked()
     // var i = 4;
-    arr = analyzeall(data)
+    //arr = analyzeall(data)
 
     // MIPS.set(arr[i].bit)
     // MIPS.run()
@@ -93,7 +93,7 @@ function callAssemblyAPI(editorText) {
                 resultString += "\n";
             }
             assemblyEditor.setValue(resultString);
-            
+
             //pru
             arr = analyzeall(result);
         }
@@ -108,7 +108,7 @@ function renderRegisterFile(registerNumber, registerValue) {
 }
 
 function renderRegisterValues(registerValues) {
-    var registerDiv = $(".svgDiv").children();
+    var registerDiv =$(".register");
     for (var i = 0; i < registerDiv.length; i++) {
         registerDiv[i].innerHTML = registerValues[i];
     }
@@ -189,6 +189,12 @@ function drawSVGLine(x1, y1, x2, y2) {
         .appendTo($svg);
 };
 
+function renderCUValues(CUValues){
+  var t  = $(".CU");
+  for(var i = 0; i < 7; i++){
+    t[i].innerHTML = CUValues[i];
+  }
+}
 function createRegisterDivs() {
     var registerFile = document.getElementById("registerFile");
     var startX = $(window).width() * 0.3 + 10 + registerFile.children[0].x.animVal.value;
@@ -205,6 +211,19 @@ function createRegisterDivs() {
             }).prependTo(svgContainer);
         }
     }
+    var divPosX = [315, 455, 495, 529, 602, 671, 800]
+    var divPosY = [209, 412, 319, 257, 169, 255, 345]
+    for( var i = 0; i< 7; i++){
+      var myX = $(window).width() * 0.3 + divPosX[i];
+      var myY = 55 + divPosY[i];
+      $("<div/>", {
+          "class": "CU",
+          text: "",
+          style: "position:absolute; left:" + myX + "px; top:" + myY + "px; width:30px;"
+      }).prependTo(svgContainer);
+    }
+
+
 }
 
 function resetRegisterDivs() {
