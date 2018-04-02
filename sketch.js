@@ -1,10 +1,11 @@
 function testButtonClicked() {
-  renderCUValues([0, 0, 0, 0, 0, 0, 0]);
+    renderCUValues([0, 0, 0, 0, 0, 0, 0]);
     // renderDatapath([3, 102]);
     //resetButtonClicked()
     // var i = 4;
-    //arr = analyzeall(data)
-
+    arr = analyzeall(data)
+    console.log("arr set to ", arr)
+    PROGRAM_COUNTER = 0;
     // MIPS.set(arr[i].bit)
     // MIPS.run()
     // MIPS.print()
@@ -25,18 +26,23 @@ function stepButtonClicked() {
     if (PROGRAM_COUNTER < arr.length) {
 
         resetButtonClicked();
+        console.log("counter+", PROGRAM_COUNTER)
 
         MIPS.set(arr[PROGRAM_COUNTER].bit)
         MIPS.run()
         MIPS.print()
 
-        var r = MIPS.render()
-        renderDatapath(r)
-
-
         simulate(arr[PROGRAM_COUNTER]);
         renderRegisterValues(Registers.getRegs())
+
+        var r = MIPS.renderpaths()
+        renderDatapath(r)
+
+        var n = MIPS.rendernums()
+        console.log("nums", n)
+        renderCUValues(n)
         PROGRAM_COUNTER++;
+
     } else {
         alert("pc!")
     }
@@ -45,6 +51,8 @@ function stepButtonClicked() {
 function resetButtonClicked() {
     $("#svgTemp").children().remove();
     resetRegisterDivs();
+    renderCUValues(['', '', '', '', '', '', '']);
+    // PROGRAM_COUNTER = 0;
 
 }
 
@@ -87,9 +95,12 @@ function callAssemblyAPI(editorText) {
             // arr = analyze(result, 2);
 
             //ada display assembly code on screen
+            //undefined
             var resultString = "";
             for (var i = 0; i < result.asm.length; i++) {
+                // if (result.asm[i].text != null) {
                 resultString += result.asm[i].text;
+                // }
                 resultString += "\n";
             }
             assemblyEditor.setValue(resultString);
@@ -108,7 +119,7 @@ function renderRegisterFile(registerNumber, registerValue) {
 }
 
 function renderRegisterValues(registerValues) {
-    var registerDiv =$(".register");
+    var registerDiv = $(".register");
     for (var i = 0; i < registerDiv.length; i++) {
         registerDiv[i].innerHTML = registerValues[i];
     }
@@ -189,12 +200,13 @@ function drawSVGLine(x1, y1, x2, y2) {
         .appendTo($svg);
 };
 
-function renderCUValues(CUValues){
-  var t  = $(".CU");
-  for(var i = 0; i < 7; i++){
-    t[i].innerHTML = CUValues[i];
-  }
+function renderCUValues(CUValues) {
+    var t = $(".CU");
+    for (var i = 0; i < 7; i++) {
+        t[i].innerHTML = CUValues[i];
+    }
 }
+
 function createRegisterDivs() {
     var registerFile = document.getElementById("registerFile");
     var startX = $(window).width() * 0.3 + 10 + registerFile.children[0].x.animVal.value;
@@ -213,14 +225,14 @@ function createRegisterDivs() {
     }
     var divPosX = [315, 455, 495, 529, 602, 671, 800]
     var divPosY = [209, 412, 319, 257, 169, 255, 345]
-    for( var i = 0; i< 7; i++){
-      var myX = $(window).width() * 0.3 + divPosX[i];
-      var myY = 55 + divPosY[i];
-      $("<div/>", {
-          "class": "CU",
-          text: "",
-          style: "position:absolute; left:" + myX + "px; top:" + myY + "px; width:30px;"
-      }).prependTo(svgContainer);
+    for (var i = 0; i < 7; i++) {
+        var myX = $(window).width() * 0.3 + divPosX[i];
+        var myY = 55 + divPosY[i];
+        $("<div/>", {
+            "class": "CU",
+            text: "",
+            style: "position:absolute; left:" + myX + "px; top:" + myY + "px; width:30px;"
+        }).prependTo(svgContainer);
     }
 
 

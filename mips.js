@@ -526,7 +526,7 @@ var MIPS = {
         console.log(DataMemory.memory)
     },
 
-    render: function() {
+    renderpaths: function() {
         var paths = [];
         paths.push(5);
         if (MUX3.S != null && MUX3.S != undefined) {
@@ -575,88 +575,22 @@ var MIPS = {
         paths.push(6)
         return paths
 
-
+    },
+    
+    rendernums: function() {
+        var nums = [];
+        var props = ["RegWrite", "RegDst", "ALUSrc", "ALUControl", "Branch", "MemWrite", "MemtoReg"]
+        for (var i in props) {
+            var e = props[i]
+            console.log("e+", ControlUnit[e])
+            if (ControlUnit[e] == null) {
+                nums.push('X');
+            } else {
+                nums.push(ControlUnit[e])
+            }
+        }
+        return nums;
     }
-
-
-    // set: function(code) {
-    //     this.code = code
-    //     RegisterFile.A1 = code.substring(6, 11)
-    //     RegisterFile.A3 = code.substring(11, 16)
-    //     RegisterFile.WE3 = 1;
-
-    //     // RegisterFile.print()
-
-    //     ALU.sa = RegisterFile.A1;
-
-    //     SignExtend.set(code.substring(16, 32))
-
-    //     ALU.sb = SignExtend.run()
-
-    //     // ALU.sb = SignExtend(code.substring(16, 32))
-    //     ALU.control = "010";
-
-
-
-    //     DataMemory.WE = 0
-    //     DataMemory.A = ALU.run()
-
-    //     ALU.print()
-
-    //     RegisterFile.WD3 = DataMemory.run()
-
-    //     // RegisterFile.print()
-    //     // ALU.print()
-    //     // DataMemory.print()
-    // },
-
-    // run: function() {
-
-    //     resetPaths();
-
-    //     var paths = [];
-    //     var polys = [];
-
-    //     RegisterFile.run()
-
-    //     RegisterFile.print()
-
-    //     var result = RegisterFile.print();
-    //     paths = paths.concat(result.PATH);
-    //     polys = polys.concat(result.POLYS);
-
-    //     var result = ALU.print();
-    //     console.log(result.PATH)
-    //     paths = paths.concat(result.PATH);
-    //     polys = polys.concat(result.POLY);
-
-
-    //     var result = SignExtend.print();
-    //     paths = paths.concat(result.PATH);
-    //     polys = polys.concat(result.POLYS);
-
-    //     var result = DataMemory.print();
-    //     paths = paths.concat(result.PATH);
-    //     polys = polys.concat(result.POLYS);
-
-    //     console.log("PATHS", paths)
-    //     console.log("POLYS", polys)
-
-
-
-    //     for (var i = 0; i < paths.length; i++) {
-    //         console.log(paths[i])
-    //         renderDatapath(paths[i])
-    //     }
-
-
-    //     for (var i = 0; i < polys.length; i++) {
-    //         renderDatapathPoly(polys[i])
-    //     }
-
-
-
-    // }
 }
 
 
