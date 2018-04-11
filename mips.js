@@ -573,6 +573,7 @@ var MIPS = {
         paths.push(105)
         paths.push(106)
         paths.push(6)
+        console.log("Paths", paths)
         return paths
 
     },

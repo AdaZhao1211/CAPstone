@@ -52,23 +52,66 @@ var Registers = {
     IType: ["addi", "addiu", "beq", "bne", "lw", "sw", "lui", "li"], //li is treated as lui
     JType: ["j", "jal"],
 
+    database: {
+        "add": [0x00, 0x20],
+        "addi": [0x08, null],
+        "addiu": [0x09, null],
+        "addu": [0x00, 0x21],
+        "and": [0x00, 0x24],
+        "andi": [0x0C, null],
+        "beq": [0x04, null],
+        "bne": [0x05, null],
+        "div": [0x00, 0x1A],
+        "divu": [0x00, 0x1B],
+        "j": [0x02, null],
+        "jal": [0x03, null],
+        "jr": [0x00, 0x08],
+        "lbu": [0x24, null],
+        "lhu": [0x25, null],
+        "lui": [0x0F, null],
+        "lw": [0x23, null],
+        "mfhi": [0x00, 0x10],
+        "mflo": [0x00, 0x12],
+        "mfc0": [0x10, null],
+        "mult": [0x00, 0x18],
+        "multu": [0x00, 0x19],
+        "nor": [0x00, 0x27],
+        "xor": [0x00, 0x26],
+        "or": [0x00, 0x25],
+        "ori": [0x0D, null],
+        "sb": [0x28, null],
+        "sh": [0x29, null],
+        "slt": [0x00, 0x2A],
+        "slti": [0x0A, null],
+        "sltiu": [0x0B, null],
+        "sltu": [0x00, 0x2B],
+        "sll": [0x00, 0x00],
+        "srl": [0x00, 0x02],
+        "sra": [0x00, 0x03],
+        "sub": [0x00, 0x22],
+        "subu": [0x00, 0x23],
+        "sw": [0x2B, null]
+    },
+
     OpTable: {
-        "addiu": 0x09,
-        "li": 0x23,
-        "lw": 0x23,
-        "sw": 0x2B,
-        "lui": 0x0F,
-        "li": 0x0F,
-        "j": 0x02
+        // "addi": 0x08,
+        // "addiu": 0x09,
+        // "li": 0x23,
+        // "lw": 0x23,
+        // "sw": 0x2B,
+        // "lui": 0x0F,
+        // "li": 0x0F,
+        // "j": 0x02
     },
 
     FuncTable: {
-        "move": 0x20,
-        "add": 0x20,
-        "addu": 0x21,
-        "and": 0x24,
-        "jr": 0x08,
-        "or": 0x25
+
+        // "move": 0x20,
+        // "add": 0x20,
+        // "addu": 0x21,
+        // "and": 0x24,
+        // "jr": 0x08,
+        // "or": 0x25
     },
 
     index: function(r_name) {
@@ -134,6 +177,14 @@ var Registers = {
         }
     }
 }
+// Fill up the OpTable and FuncTable
+for(var key in Registers.database){
+    element = Registers.database[key]
+    Registers.OpTable[key]=element[0]
+    Registers.FuncTable[key]=element[1]
+    
+}
+
 
 
 /*
@@ -163,6 +214,12 @@ Format.prototype.recognize = function() {
     }
     this.op = this.instr.slice(0, this.instr.indexOf(' '))
     var para = this.instr.slice(this.instr.indexOf(' ') + 1)
+
+
+    //ToDo: Manilupated Type!!!
+    if(this.op == 'addiu'){
+        this.op = 'addi'
+    }
 
     this.type = Registers.getType(this.op)
     if (this.type === "R") {
