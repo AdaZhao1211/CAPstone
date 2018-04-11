@@ -89,23 +89,20 @@ function callAssemblyAPI(editorText) {
         dataType: "json",
         data: JSON.stringify(myJSON),
         success: function(result) {
-            //pru
-            // console.log(result);
-            // console.log(result.asm);
-            // arr = analyze(result, 2);
-
             //ada display assembly code on screen
             //undefined
             var resultString = "";
             for (var i = 0; i < result.asm.length; i++) {
                 // if (result.asm[i].text != null) {
-                resultString += result.asm[i].text;
-                // }
-                resultString += "\n";
+                if(result.asm[i].text){
+                  console.log(String(result.asm[i].text).valueOf() == new String("nop").valueOf());
+                  resultString += result.asm[i].text;
+                  resultString += "\n";
+
+                }
+
             }
             assemblyEditor.setValue(resultString);
-
-            //pru
             arr = analyzeall(result);
         }
     })

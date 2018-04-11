@@ -154,6 +154,8 @@
                             470.357,360.159     " />
                             <polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="572.199,316.501 596.277,316.501
                             596.173,237.93 736.402,237.93 736.511,360.404 769.339,360.401   " />
+                            <polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="410.691,337 449.79,337 449.79,383.395
+                            621.595,383.344     " />
                             <polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="191.778,106.14 158,106.138 158,256.9
                             " />
                             <polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="191.445,127.14 158,127.14 158,256.9  " />
@@ -164,8 +166,6 @@
                             <polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="431.945,453.807 158,453.804 158,256.9
                             " />
                             <polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="186.333,520 158,520.583 158,256.9    " />
-                            <polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="410.691,337 449.79,337 449.79,383.395
-                            621.595,383.344     " />
                         </g>
                         <g id="svgTemp">
                         </g>
@@ -247,8 +247,9 @@
     var ZOOM = 0;
     var codeEditor = CodeMirror(document.getElementById("codeEditor"), {
         value: "//put your code here\n",
-        mode: "clike",
-        lineNumbers: true
+        mode: "text/x-c++src",
+        lineNumbers: true,
+        matchBrackets: true,
     });
     var assemblyEditor = CodeMirror(document.getElementById("assemblyEditor"), {
         lineNumbers: true
