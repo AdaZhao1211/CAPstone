@@ -1,11 +1,12 @@
 function testButtonClicked() {
-    renderCUValues([0, 0, 0, 0, 0, 0, 0]);
-    // renderDatapath([3, 102]);
-    //resetButtonClicked()
-    // var i = 4;
-    arr = analyzeall(data)
-    console.log("arr set to ", arr)
-    PROGRAM_COUNTER = 0;
+
+    // renderCUValues([0, 0, 0, 0, 0, 0, 0]);
+    // // renderDatapath([3, 102]);
+    // //resetButtonClicked()
+    // // var i = 4;
+    // arr = analyzeall(data)
+    // console.log("arr set to ", arr)
+    // PROGRAM_COUNTER = 0;
     // MIPS.set(arr[i].bit)
     // MIPS.run()
     // MIPS.print()
@@ -43,6 +44,8 @@ function stepButtonClicked() {
         renderCUValues(n)
         PROGRAM_COUNTER++;
 
+        divIndex ++;
+        renderAssemblyHighlight(divIndex)
     } else {
         alert("pc!")
     }
@@ -95,12 +98,13 @@ function callAssemblyAPI(editorText) {
             for (var i = 0; i < result.asm.length; i++) {
                 // if (result.asm[i].text != null) {
                 if(result.asm[i].text){
-                  console.log(String(result.asm[i].text).valueOf() == new String("nop").valueOf());
-                  resultString += result.asm[i].text;
-                  resultString += "\n";
-
+                  returnString = result.asm[i].text
+                  tempstring = returnString.replace(/ /g,'');
+                  if(tempstring != "nop"){
+                    resultString += result.asm[i].text;
+                    resultString += "\n";
+                  }
                 }
-
             }
             assemblyEditor.setValue(resultString);
             arr = analyzeall(result);
@@ -108,6 +112,12 @@ function callAssemblyAPI(editorText) {
     })
 }
 
+function renderAssemblyHighlight(divIndex){
+  codeDivs = $('#assemblyEditor .CodeMirror-code').children();
+  console.log(codeDivs);
+  codeDivs.css("background-color", "white");
+  $(codeDivs[divIndex]).css("background-color", "#FFF70A")
+}
 function renderRegisterFile(registerNumber, registerValue) {
     var registerFile = $("#registerFile").children()[registerNumber];
     drawSVGRect(registerFile.x.animVal.value, registerFile.y.animVal.value, registerFile.width.animVal.value, registerFile.height.animVal.value);
