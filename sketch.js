@@ -232,7 +232,7 @@ function createRegisterDivs() {
             "class": "CU",
             text: "",
             style: "position:absolute; left:" + myX + "px; top:" + myY + "px; width:30px;"
-        }).prependTo(svgContainer);
+        }).appendTo(svgContainer);
     }
 
 
