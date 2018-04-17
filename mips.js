@@ -62,16 +62,16 @@ var RegisterFile = {
         console.log(this.A1, this.A2, this.A3, this.WD3, this.WE3, this.RD1, this.RD2)
         console.log("----------")
 
-        var render_paths = {
-            PATH: [0, 1, 2],
-            POLY: []
-        }
+        // var render_paths = {
+        //     PATH: [0, 1, 2],
+        //     POLY: []
+        // }
 
-        if (this.WE3 == 1) {
-            //Light up write path
-        }
+        // if (this.WE3 == 1) {
+        //     //Light up write path
+        // }
 
-        return render_paths;
+        // return render_paths;
 
     }
 }
@@ -138,20 +138,20 @@ var DataMemory = {
         console.log(this.A, this.WD, this.WE, this.RD)
         console.log("----------")
 
-        var render_paths = {
-            PATH: [],
-            POLY: []
-        }
+        // var render_paths = {
+        //     PATH: [],
+        //     POLY: []
+        // }
 
-        if (this.WE == 1) {
-            render_paths.PATH = [10];
-            render_paths.POLY = [4]
-        } else if (this.WE == 0) {
-            render_paths.PATH = [9, 10];
-            render_paths.POLY = []
-        }
+        // if (this.WE == 1) {
+        //     render_paths.PATH = [10];
+        //     render_paths.POLY = [4]
+        // } else if (this.WE == 0) {
+        //     render_paths.PATH = [9, 10];
+        //     render_paths.POLY = []
+        // }
 
-        return render_paths;
+        // return render_paths;
     }
 
 }
@@ -166,20 +166,29 @@ var SignExtend = {
         this.update()
     },
     update: function() {
-        this.output = this.input
+        // this.output = this.input
+        this.run()
+//         int main(){
+//   int x = 5;
+// }
+        console.log("SignExtend", this.output)
         MUX2.set("D1", this.output)
     },
     run: function() {
+        pre = String(this.input.charAt(0))
         this.output = this.input
+        for (var i = 0; i < 15; i++) {
+            this.output = pre + this.output
+        }
+        // this.output = this.input
         return this.output
     },
 
     print: function() {
-        var render_paths = {
-            PATH: [5],
-            POLY: [2]
-        }
-        return render_paths;
+        console.log("SignExtend")
+        console.log("Input:", this.input)
+        console.log("Output", this.output)
+        console.log("----------")
     }
 }
 
@@ -343,17 +352,6 @@ Multiplexer.prototype.set = function(prop, val) {
         flag = true;
     }
 
-    // if (prop === "D0") {
-    //     this.D0 = val;
-    //     flag = true;
-    // } else if (prop === "D1") {
-    //     this.D1 = val;
-    //     flag = true;
-    // } else if (prop === "S") {
-    //     this.S = val;
-    //     flag = true;
-    // }
-
     //If valid change, update output
     if (flag) {
         this.update();
@@ -369,7 +367,6 @@ Multiplexer.prototype.update = function() {
         this.D1 = parseInt(this.D1, 2)
     }
 
-    // this.D1 = parseInt(this.D1,2)
     if (this.S == 0) {
         output = this.D0;
     } else if (this.S == 1) {
@@ -379,18 +376,15 @@ Multiplexer.prototype.update = function() {
         output = 0;
     }
     this.Y = output
-    // if (this.S != null) {
 
     for (var key in this.subject) {
-        // console.log(key)
         if (key == "RegisterFile") {
             RegisterFile.set(this.subject[key], this.Y)
         } else if (key == "ALU") {
-            // console.log(this)
             ALU.set(this.subject[key], this.Y)
         }
     }
-    // }
+
     return output;
 
 
@@ -444,7 +438,15 @@ var ALU = {
             this.sa = parseInt(this.sa, 2)
         }
         if (!Number.isInteger(this.sb)) {
-            this.sb = parseInt(this.sb, 2)
+            // console.log("sb",this.sb)
+            // this.sb = this.sb.slice(15)
+            // if (this.sb.charAt(0) == '1') {
+            //     this.sb = '0' + this.sb.slice(1)
+            //     this.sb = parseInt(this.sb, 2)
+            //     this.sb = -this.sb
+            // } else {
+                this.sb = parseInt(this.sb, 2)
+            // }
         }
         // this.sb = parseInt(this.sb, 2)
         if (this.control === "000") {
@@ -475,12 +477,12 @@ var ALU = {
         console.log("sa, sb, control, output")
         console.log(this.sa, this.sb, this.control, this.output)
         console.log("----------")
-        var render_paths = {
-            PATH: [7, 8, 10],
-            POLY: []
-        }
+        // var render_paths = {
+        //     PATH: [7, 8, 10],
+        //     POLY: []
+        // }
 
-        return render_paths;
+        // return render_paths;
     }
 
 }
@@ -518,6 +520,7 @@ var MIPS = {
         ControlUnit.print()
         RegisterFile.print()
         MUX1.print()
+        SignExtend.print()
         MUX2.print()
         ALU.print()
         DataMemory.print()
@@ -577,13 +580,13 @@ var MIPS = {
         return paths
 
     },
-    
+
     rendernums: function() {
         var nums = [];
-        var props = ["RegWrite", "RegDst", "ALUSrc", "ALUControl", "Branch", "MemWrite", "MemtoReg"]
+        var props = ["RegWrite", "RegDst", "ALUSrc", "ALUControl", "Branch", "MemWrite", "MemtoReg", "Jump"]
         for (var i in props) {
             var e = props[i]
-            console.log("e+", ControlUnit[e])
+            console.log(e, ":", ControlUnit[e])
             if (ControlUnit[e] == null) {
                 nums.push('X');
             } else {

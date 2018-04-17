@@ -20,11 +20,18 @@ data = {
 
 //Format a number to a fixed length
 function digi(num, length) {
-    num = num.toString(2)
-    while (num.length < length) {
-        num = "0" + num
+    n = num.toString(2)
+    
+    if (num < 0) {
+        n = n.slice(1)
     }
-    return num
+    while (n.length < length) {
+        n = "0" + n
+    }
+    if (num < 0) {
+        n = "1" + n.slice(1)
+    }
+    return n
 }
 
 
@@ -178,11 +185,11 @@ var Registers = {
     }
 }
 // Fill up the OpTable and FuncTable
-for(var key in Registers.database){
+for (var key in Registers.database) {
     element = Registers.database[key]
-    Registers.OpTable[key]=element[0]
-    Registers.FuncTable[key]=element[1]
-    
+    Registers.OpTable[key] = element[0]
+    Registers.FuncTable[key] = element[1]
+
 }
 
 
@@ -217,7 +224,7 @@ Format.prototype.recognize = function() {
 
 
     //ToDo: Manilupated Type!!!
-    if(this.op == 'addiu'){
+    if (this.op == 'addiu') {
         this.op = 'addi'
     }
 
