@@ -1,4 +1,6 @@
 function testButtonClicked() {
+  renderDatapath([2, 102]);
+  renderGateDatapath([2, 102]);
 
     // renderCUValues([0, 0, 0, 0, 0, 0, 0]);
     // // renderDatapath([3, 102]);
@@ -137,20 +139,20 @@ function renderDatapath(datapathArray) {
         var datapathIndex = datapathArray[i];
         if (datapathIndex > 99) {
             datapathIndex %= 100;
-            forDatapathPoly(datapathIndex);
+            forDatapathPoly("polylines", "svgTemp", datapathIndex);
         } else {
-            forDatapath(datapathIndex);
+            forDatapath("lines", "svgTemp", datapathIndex);
         }
     }
 }
 
-function forDatapath(lineindex) {
-    var datapath = $("#lines").children()[lineindex];
-    drawSVGLine(datapath.x1.animVal.value, datapath.y1.animVal.value, datapath.x2.animVal.value, datapath.y2.animVal.value)
+function forDatapath(divID, renderID, lineindex) {
+    var datapath = $("#"+divID).children()[lineindex];
+    drawSVGLine(renderID, datapath.x1.animVal.value, datapath.y1.animVal.value, datapath.x2.animVal.value, datapath.y2.animVal.value)
 }
 
-function forDatapathPoly(polyindex) {
-    var datapath = $("#polylines").children()[polyindex].points;
+function forDatapathPoly(divID, renderID, polyindex) {
+    var datapath = $("#"+divID).children()[polyindex].points;
     //console.log(datapath);
     var datapoints = '';
     for (var i = 0; i < datapath.length; i++) {
@@ -159,32 +161,28 @@ function forDatapathPoly(polyindex) {
         datapoints += datapath[i].y;
         datapoints += " ";
     }
-    drawSVGPolyline(datapoints);
+    drawSVGPolyline(renderID, datapoints);
     //drawSVGPolyline("20,30 400,200 300,100");
-
-
 }
 
 function SVG(tag) {
     return document.createElementNS('http://www.w3.org/2000/svg', tag);
 }
 
-function drawSVGRect(x, y, w, h) {
-    var $svg = $("#svgTemp");
-    $(SVG('rect'))
-        .attr('x', x)
-        .attr('y', y)
-        .attr('width', w)
-        .attr('height', h)
-        .attr('fill', "none")
-        .attr('stroke', "red")
-        .attr('stroke-width', 3)
-        .attr('stroke-miterlimit', 10)
-        .appendTo($svg);
-};
+function renderGateDatapath(datapathArray){
+  for (var i = 0; i < datapathArray.length; i++) {
+      var datapathIndex = datapathArray[i];
+      if (datapathIndex > 99) {
+          datapathIndex %= 100;
+          forDatapathPoly("gatePoly", "gateTemp", datapathIndex);
+      } else {
+          forDatapath("gateLine", "gateTemp", datapathIndex);
+      }
+  }
+}
 
-function drawSVGPolyline(datapoints) {
-    var $svg = $("#svgTemp");
+function drawSVGPolyline(ID, datapoints) {
+    var $svg = $("#"+ID);
     $(SVG('polyline'))
         .attr('points', datapoints)
         .attr('stroke', "red")
@@ -194,8 +192,8 @@ function drawSVGPolyline(datapoints) {
         .appendTo($svg);
 }
 
-function drawSVGLine(x1, y1, x2, y2) {
-    var $svg = $("#svgTemp");
+function drawSVGLine(ID, x1, y1, x2, y2) {
+    var $svg = $("#"+ID);
     $(SVG('line'))
         .attr('x1', x1)
         .attr('y1', y1)
