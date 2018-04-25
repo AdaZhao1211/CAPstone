@@ -526,14 +526,25 @@ var ALU = {
         }
         return sub_paths;
 
+    },
+    render_value: function() {
+        var values = [];
+        // F 2, F 1:0, output, carryon
+        // renderGateValue(["1", "01", "0", "125"]);
+
+
+        var F2 = this.control.charAt(2)
+        var F10 = this.control.substring(1, 3)
+        values.push(F2);
+        values.push(F10);
+        values.push(this.output)
+        values.push(this.zero)
+        return values;
     }
 
 
 
 }
-
-
-
 
 
 
@@ -644,6 +655,50 @@ var MIPS = {
             }
         }
         return nums;
+    },
+
+    render: function() {
+        var sub_paths = [];
+        var F2 = this.control.charAt(2)
+        var F10 = this.control.substring(1, 3)
+
+        // console.log("ALU", F2, F10)
+        F2 = +F2
+        F10 = parseInt(F10, 2)
+        console.log("ALU", F2, F10)
+        if (F2 == 0) {
+            sub_paths.push(0);
+        } else if (F2 == 1) {
+            sub_paths.push(103, 7)
+        }
+        // sub_paths.push(2)
+        switch (F10) {
+            case 0:
+                sub_paths.push(3);
+                sub_paths.push(101);
+                sub_paths.push(100);
+                break;
+            case 1:
+                sub_paths.push(4);
+                sub_paths.push(104);
+                sub_paths.push(105);
+                break;
+            case 2:
+                sub_paths.push(5);
+                sub_paths.push(2);
+                sub_paths.push(1);
+                break;
+            case 3:
+                sub_paths.push(6);
+                sub_paths.push(102);
+                sub_paths.push(2);
+                sub_paths.push(1);
+                break;
+            default:
+                break;
+
+        }
+        return sub_paths;
     }
 }
 
