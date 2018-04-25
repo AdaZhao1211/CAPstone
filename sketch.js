@@ -23,6 +23,7 @@ function assembleButtonClicked() {
 
     var editorText = codeEditor.getValue();
     callAssemblyAPI(editorText);
+    PROGRAM_COUNTER = 0;
 }
 
 function stepButtonClicked() {
@@ -46,7 +47,7 @@ function stepButtonClicked() {
         renderCUValues(n)
         PROGRAM_COUNTER++;
 
-        divIndex ++;
+        divIndex++;
         renderAssemblyHighlight(divIndex)
     } else {
         alert("pc!")
@@ -99,13 +100,13 @@ function callAssemblyAPI(editorText) {
             var resultString = "";
             for (var i = 0; i < result.asm.length; i++) {
                 // if (result.asm[i].text != null) {
-                if(result.asm[i].text){
-                  returnString = result.asm[i].text
-                  tempstring = returnString.replace(/ /g,'');
-                  if(tempstring != "nop"){
-                    resultString += result.asm[i].text;
-                    resultString += "\n";
-                  }
+                if (result.asm[i].text) {
+                    returnString = result.asm[i].text
+                    tempstring = returnString.replace(/ /g, '');
+                    if (tempstring != "nop") {
+                        resultString += result.asm[i].text;
+                        resultString += "\n";
+                    }
                 }
             }
             assemblyEditor.setValue(resultString);
@@ -128,6 +129,7 @@ function renderAssemblyHighlight(divIndex){
   codeDivs.css("background-color", "white");
   $(codeDivs[divIndex]).css("background-color", "#FFF70A")
 }
+
 function renderRegisterFile(registerNumber, registerValue) {
     var registerFile = $("#registerFile").children()[registerNumber];
     drawSVGRect(registerFile.x.animVal.value, registerFile.y.animVal.value, registerFile.width.animVal.value, registerFile.height.animVal.value);
@@ -155,12 +157,12 @@ function renderDatapath(datapathArray) {
 }
 
 function forDatapath(divID, renderID, lineindex) {
-    var datapath = $("#"+divID).children()[lineindex];
+    var datapath = $("#" + divID).children()[lineindex];
     drawSVGLine(renderID, datapath.x1.animVal.value, datapath.y1.animVal.value, datapath.x2.animVal.value, datapath.y2.animVal.value)
 }
 
 function forDatapathPoly(divID, renderID, polyindex) {
-    var datapath = $("#"+divID).children()[polyindex].points;
+    var datapath = $("#" + divID).children()[polyindex].points;
     //console.log(datapath);
     var datapoints = '';
     for (var i = 0; i < datapath.length; i++) {
@@ -177,20 +179,20 @@ function SVG(tag) {
     return document.createElementNS('http://www.w3.org/2000/svg', tag);
 }
 
-function renderGateDatapath(datapathArray){
-  for (var i = 0; i < datapathArray.length; i++) {
-      var datapathIndex = datapathArray[i];
-      if (datapathIndex > 99) {
-          datapathIndex %= 100;
-          forDatapathPoly("gatePoly", "gateTemp", datapathIndex);
-      } else {
-          forDatapath("gateLine", "gateTemp", datapathIndex);
-      }
-  }
+function renderGateDatapath(datapathArray) {
+    for (var i = 0; i < datapathArray.length; i++) {
+        var datapathIndex = datapathArray[i];
+        if (datapathIndex > 99) {
+            datapathIndex %= 100;
+            forDatapathPoly("gatePoly", "gateTemp", datapathIndex);
+        } else {
+            forDatapath("gateLine", "gateTemp", datapathIndex);
+        }
+    }
 }
 
 function drawSVGPolyline(ID, datapoints) {
-    var $svg = $("#"+ID);
+    var $svg = $("#" + ID);
     $(SVG('polyline'))
         .attr('points', datapoints)
         .attr('stroke', "red")
@@ -201,7 +203,7 @@ function drawSVGPolyline(ID, datapoints) {
 }
 
 function drawSVGLine(ID, x1, y1, x2, y2) {
-    var $svg = $("#"+ID);
+    var $svg = $("#" + ID);
     $(SVG('line'))
         .attr('x1', x1)
         .attr('y1', y1)
