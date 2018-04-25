@@ -1,9 +1,9 @@
 function testButtonClicked() {
-  // F 2, F 1:0, output, carryon
-  renderGateValue(["1", "01", "0", "125"]);
-  // renderAdderAdder([1, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 1], [1, 0, 1, 0, 1]);
-    var a = ALU.render_gates()
-    renderAdderAdder(a[0],a[1],a[2],a[3])
+    // F 2, F 1:0, output, carryon
+    renderGateValue(["1", "01", "0", "125"]);
+    // renderAdderAdder([1, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 1], [1, 0, 1, 0, 1]);
+    // var a = ALU.render_gates()
+    // renderAdderAdder(a[0],a[1],a[2],a[3])
     // renderCUValues([0, 0, 0, 0, 0, 0, 0]);
     // // renderDatapath([3, 102]);
     // //resetButtonClicked()
@@ -52,8 +52,13 @@ function stepButtonClicked() {
         divIndex++;
         renderAssemblyHighlight(divIndex)
 
+        console.log("ALUrender", ALU.render())
         renderGateDatapath(ALU.render())
+
         renderGateValue(ALU.render_value())
+
+        var a = ALU.render_gates()
+        renderAdderAdder(a[0], a[1], a[2], a[3])
 
     } else {
         alert("pc!")
@@ -124,11 +129,11 @@ function callAssemblyAPI(editorText) {
 
 
 /************** Assembly *********/
-function renderAssemblyHighlight(divIndex){
-  codeDivs = $('#assemblyEditor .CodeMirror-code').children();
-  console.log(codeDivs);
-  codeDivs.css("background-color", "white");
-  $(codeDivs[divIndex]).css("background-color", "#FFF70A")
+function renderAssemblyHighlight(divIndex) {
+    codeDivs = $('#assemblyEditor .CodeMirror-code').children();
+    console.log(codeDivs);
+    codeDivs.css("background-color", "white");
+    $(codeDivs[divIndex]).css("background-color", "#FFF70A")
 }
 
 /*************** Microarchitecture *****************/
@@ -165,11 +170,11 @@ function renderCUValues(CUValues) {
     }
 }
 /****************** ALU ***********************/
-function renderGateValue(gateValues){
-  var gateText = $("#gateText").children();
-  for(var i = 0; i < gateValues.length; i++){
-    gateText[i].innerHTML = gateValues[i];
-  }
+function renderGateValue(gateValues) {
+    var gateText = $("#gateText").children();
+    for (var i = 0; i < gateValues.length; i++) {
+        gateText[i].innerHTML = gateValues[i];
+    }
 
 }
 
@@ -180,34 +185,34 @@ function renderGateDatapath(datapathArray) {
             datapathIndex %= 100;
             forDatapathPoly("gatePoly", "gateTemp", datapathIndex);
         } else {
-            forDatapath("gateLine", "red", "gateTemp", datapathIndex);
+            forDatapath("gateLine", "gateTemp", "red", datapathIndex);
         }
     }
 }
 /********************* Adder ************************/
-function renderAdderAdder(A, B, output, carry){
-  var adderText = $("#adderText").children();
-  for(var i = 0; i < output.length; i++){
-    if(output[i] == 1){
-      forDatapath("adderNoLit", "adderTemp", "#25ebd1", i);
+function renderAdderAdder(A, B, output, carry) {
+    var adderText = $("#adderText").children();
+    for (var i = 0; i < output.length; i++) {
+        if (output[i] == 1) {
+            forDatapath("adderNoLit", "adderTemp", "#25ebd1", i);
+        }
+        if (A[i] == 1) {
+            forDatapath("adderNoLit", "adderTemp", "#25ebd1", i + 4)
+        }
+        if (B[i] == 1) {
+            forDatapath("adderNoLit", "adderTemp", "#25ebd1", i + 8)
+        }
+        adderText[i].innerHTML = output[i];
+        adderText[i + 4].innerHTML = A[i];
+        adderText[i + 8].innerHTML = B[i];
     }
-    if(A[i] == 1){
-      forDatapath("adderNoLit", "adderTemp", "#25ebd1", i+4)
+    for (var i = 0; i < carry.length; i++) {
+        if (carry[i] == 1) {
+            forDatapath("adderLine", "adderTemp", "#25ebd1", i);
+        }
     }
-    if(B[i] == 1){
-      forDatapath("adderNoLit", "adderTemp", "#25ebd1", i+8)
-    }
-    adderText[i].innerHTML = output[i];
-    adderText[i+4].innerHTML = A[i];
-    adderText[i+8].innerHTML = B[i];
-  }
-  for(var i = 0; i < carry.length; i++){
-    if(carry[i] == 1){
-      forDatapath("adderLine", "adderTemp", "#25ebd1", i);
-    }
-  }
-  adderText[12].innerHTML = carry[4];
-  adderText[13].innerHTML = carry[0];
+    adderText[12].innerHTML = carry[4];
+    adderText[13].innerHTML = carry[0];
 
 
 }
@@ -231,17 +236,19 @@ function forDatapathPoly(divID, renderID, polyindex) {
     drawSVGPolyline(renderID, datapoints);
     //drawSVGPolyline("20,30 400,200 300,100");
 }
-function forPolygon(divID, renderID, index){
-  var datapath = $("#" + divID).children()[index].points;
-  var datapoints = '';
-  for (var i = 0; i < datapath.length; i++) {
-      datapoints += datapath[i].x;
-      datapoints += ",";
-      datapoints += datapath[i].y;
-      datapoints += " ";
-  }
-  drawSVGPolygon(renderID, datapoints);
+
+function forPolygon(divID, renderID, index) {
+    var datapath = $("#" + divID).children()[index].points;
+    var datapoints = '';
+    for (var i = 0; i < datapath.length; i++) {
+        datapoints += datapath[i].x;
+        datapoints += ",";
+        datapoints += datapath[i].y;
+        datapoints += " ";
+    }
+    drawSVGPolygon(renderID, datapoints);
 }
+
 function SVG(tag) {
     return document.createElementNS('http://www.w3.org/2000/svg', tag);
 }
