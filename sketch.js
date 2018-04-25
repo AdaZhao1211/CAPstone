@@ -49,6 +49,10 @@ function stepButtonClicked() {
 
         divIndex++;
         renderAssemblyHighlight(divIndex)
+
+        renderGateDatapath(ALU.render())
+        renderGateValue(ALU.render_value())
+
     } else {
         alert("pc!")
     }
