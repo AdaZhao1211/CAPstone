@@ -2,6 +2,14 @@ String.prototype.getbit = function(st, ed) {
     return this.substring(31 - st, 32 - ed);
 }
 
+function output(a,b){
+    a = +a;
+    b = +b;
+    // if(a)
+
+}
+
+
 
 var RegisterFile = {
     A1: null,
@@ -540,6 +548,20 @@ var ALU = {
         values.push(this.output)
         values.push(this.zero)
         return values;
+    },
+    render_gates:function(){
+
+        var sa =  digi(this.sa,32)
+        var sb = digi(this.sb, 32)
+        var r = digi(this.sa + this.sb, 5)
+        var output = [[sa.charAt(28),sa.charAt(29),sa.charAt(30),sa.charAt(31)],
+        [sb.charAt(28),sb.charAt(29),sb.charAt(30),sb.charAt(31)], [r.charAt(1),r.charAt(2),r.charAt(3),r.charAt(4)],
+        ['','','','','']]
+        // [+sa.charAt(28)&(+sb.charAt(28)), +sa.charAt(29)&(+sb.charAt(29)), +sa.charAt(30)&(+sb.charAt(30)), +sa.charAt(31)&(+sb.charAt(31))],
+       
+        return output;
+        // console.log(digi(this.sa,32))
+        // renderAdderAdder()
     }
 
 

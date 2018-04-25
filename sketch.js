@@ -1,7 +1,9 @@
 function testButtonClicked() {
   // F 2, F 1:0, output, carryon
   renderGateValue(["1", "01", "0", "125"]);
-  renderAdderAdder([1, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 1], [1, 0, 1, 0, 1]);
+  // renderAdderAdder([1, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 1], [1, 0, 1, 0, 1]);
+    var a = ALU.render_gates()
+    renderAdderAdder(a[0],a[1],a[2],a[3])
     // renderCUValues([0, 0, 0, 0, 0, 0, 0]);
     // // renderDatapath([3, 102]);
     // //resetButtonClicked()
