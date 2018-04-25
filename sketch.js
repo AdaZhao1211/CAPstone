@@ -1,6 +1,6 @@
 function testButtonClicked() {
-  renderDatapath([2, 102]);
-  renderGateDatapath([2, 102]);
+  // F 2, F 1:0, output, carryon
+  renderGateValue(["1", "01", "0", "125"]);
 
     // renderCUValues([0, 0, 0, 0, 0, 0, 0]);
     // // renderDatapath([3, 102]);
@@ -114,6 +114,14 @@ function callAssemblyAPI(editorText) {
     })
 }
 
+
+function renderGateValue(gateValues){
+  var gateText = $("#gateText").children();
+  for(var i = 0; i < gateValues.length; i++){
+    gateText[i].innerHTML = gateValues[i];
+  }
+
+}
 function renderAssemblyHighlight(divIndex){
   codeDivs = $('#assemblyEditor .CodeMirror-code').children();
   console.log(codeDivs);
