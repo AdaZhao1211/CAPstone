@@ -6,7 +6,6 @@ function output(a,b){
     a = +a;
     b = +b;
     // if(a)
-
 }
 
 
@@ -535,12 +534,11 @@ var ALU = {
         return sub_paths;
 
     },
+
     render_value: function() {
         var values = [];
         // F 2, F 1:0, output, carryon
         // renderGateValue(["1", "01", "0", "125"]);
-
-
         var F2 = this.control.charAt(2)
         var F10 = this.control.substring(1, 3)
         values.push(F2);
@@ -549,6 +547,7 @@ var ALU = {
         values.push(this.zero)
         return values;
     },
+
     render_gates:function(){
 
         var sa =  digi(this.sa,32)
@@ -558,13 +557,11 @@ var ALU = {
         [sb.charAt(28),sb.charAt(29),sb.charAt(30),sb.charAt(31)], [r.charAt(1),r.charAt(2),r.charAt(3),r.charAt(4)],
         ['','','','','']]
         // [+sa.charAt(28)&(+sb.charAt(28)), +sa.charAt(29)&(+sb.charAt(29)), +sa.charAt(30)&(+sb.charAt(30)), +sa.charAt(31)&(+sb.charAt(31))],
-       
+
         return output;
         // console.log(digi(this.sa,32))
         // renderAdderAdder()
     }
-
-
 
 }
 

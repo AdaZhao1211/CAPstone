@@ -1,7 +1,9 @@
+var globalcount = 0;
 function testButtonClicked() {
     // F 2, F 1:0, output, carryon
-    renderGateValue(["1", "01", "0", "125"]);
-    // renderAdderAdder([1, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 1], [1, 0, 1, 0, 1]);
+    //renderGateValue(["1", "01", "0", "125"]);
+    //renderTransistor(0,1,1);
+    renderAdderAdder([1, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 1], [1, 0, 1, 0], [3, 5]);
     // var a = ALU.render_gates()
     // renderAdderAdder(a[0],a[1],a[2],a[3])
     // renderCUValues([0, 0, 0, 0, 0, 0, 0]);
@@ -156,9 +158,9 @@ function renderDatapath(datapathArray) {
         var datapathIndex = datapathArray[i];
         if (datapathIndex > 99) {
             datapathIndex %= 100;
-            forDatapathPoly("polylines", "svgTemp", datapathIndex);
+            forDatapathPoly("polylines", "svgTemp", "red", datapathIndex);
         } else {
-            forDatapath("lines", "red", "svgTemp", datapathIndex);
+            forDatapath("lines", "svgTemp", "red", datapathIndex);
         }
     }
 }
@@ -183,14 +185,14 @@ function renderGateDatapath(datapathArray) {
         var datapathIndex = datapathArray[i];
         if (datapathIndex > 99) {
             datapathIndex %= 100;
-            forDatapathPoly("gatePoly", "gateTemp", datapathIndex);
+            forDatapathPoly("gatePoly", "gateTemp", "red", datapathIndex);
         } else {
             forDatapath("gateLine", "gateTemp", "red", datapathIndex);
         }
     }
 }
 /********************* Adder ************************/
-function renderAdderAdder(A, B, output, carry) {
+function renderAdderAdder(A, B, output, carry, l) {
     var adderText = $("#adderText").children();
     for (var i = 0; i < output.length; i++) {
         if (output[i] == 1) {
@@ -208,22 +210,116 @@ function renderAdderAdder(A, B, output, carry) {
     }
     for (var i = 0; i < carry.length; i++) {
         if (carry[i] == 1) {
-            forDatapath("adderLine", "adderTemp", "#25ebd1", i);
+            forDatapath("adderLine", "adderTemp", "#25ebd1", 3-i);
         }
     }
-    adderText[12].innerHTML = carry[4];
-    adderText[13].innerHTML = carry[0];
+    adderText[12].innerHTML = carry[3];
+    for(var i = 0; i < l.length; i++){
+      var ttl = l[i];
+      if(ttl != 13){
+        forDatapath("carryLine", "adderTemp", "#25ebd1", ttl);
+      }else{
+        forDatapathPoly("carryLine", "adderTemp", "#25ebd1", ttl);
+      }
+    }
 
 
+}
+/******************* transistor ******************/
+
+function renderTransistor(a, b, c){
+  if(a == 1){
+    var achildren = $("#a").children();
+    for(var i = 0; i< achildren.length; i++){
+      forDatapath("a", "transTemp", "#6DBE45", i)
+    }
+  }
+  if(b == 1){
+    var bchildren = $("#b").children();
+    for(var i = 0; i< bchildren.length; i++){
+      forDatapath("b", "transTemp", "#6DBE45", i)
+    }
+  }
+  if(c == 1){
+    var cchildren = $("#c").children();
+    for(var i = 0; i< cchildren.length; i++){
+      forDatapath("c", "transTemp", "#6DBE45", i)
+    }
+  }
+
+  if(a == 1 && b==1 && c==1){
+    forDatapathPoly("transLines", "transTemp", "#6DBE45", 26);
+    forDatapathPoly("transLines", "transTemp", "#6DBE45", 44);
+  }
+  if(a == 1 && b==1 && c==0){
+    forDatapathPoly("transLines", "transTemp", "#6DBE45", 25);
+    forDatapathPoly("transLines", "transTemp", "#6DBE45", 12);
+    forDatapathPoly("transLines", "transTemp", "#6DBE45", 36);
+    forDatapathPoly("transLines", "transTemp", "#6DBE45", 47);
+
+    forDatapathPoly("transLines", "transTemp", "#6DBE45", 29);
+    forDatapathPoly("transLines", "transTemp", "#6DBE45", 5);
+    forDatapathPoly("transLines", "transTemp", "#6DBE45", 6);
+    forDatapath("transLines", "transTemp", "#6DBE45", 39);
+    forDatapathPoly("transLines", "transTemp", "#6DBE45", 44);
+  }
+  if(a == 0 && b == 1 && c==1){
+    var polyarr = [0, 1, 12, 28, 31, 32, 25, 35, 36, 37, 5, 6, 44, 47];
+    for(var i = 0; i < polyarr.length; i++){
+      forDatapathPoly("transLines", "transTemp", "#6DBE45", polyarr[i]);
+
+    }
+    forDatapath("transLines", "transTemp", "#6DBE45", 39);
+  }
+  if(a == 0 && b == 1 && c==0){
+    var polyarr = [0, 1, 28, 31, 32, 5, 2, 4, 9, 11, 26, 29, 43, 45];
+    for(var i = 0; i < polyarr.length; i++){
+      forDatapathPoly("transLines", "transTemp", "#6DBE45", polyarr[i]);
+    }
+    forDatapath("transLines", "transTemp", "#6DBE45", 42);
+  }
+  if(a == 1 && b == 0 && c ==1){
+    var polyarr = [1, 5, 6, 12, 25, 27, 30, 35, 36, 44, 47];
+    for(var i = 0; i < polyarr.length; i++){
+      forDatapathPoly("transLines", "transTemp", "#6DBE45", polyarr[i]);
+    }
+    forDatapath("transLines", "transTemp", "#6DBE45", 39);
+  }
+  if(a == 1 && b == 0 && c==0){
+    var polyarr = [1, 27, 30, 41, 5, 2, 4, 9, 11, 26, 29, 43, 45];
+    for(var i = 0; i < polyarr.length; i++){
+      forDatapathPoly("transLines", "transTemp", "#6DBE45", polyarr[i]);
+    }
+    forDatapath("transLines", "transTemp", "#6DBE45", 42);
+  }
+
+  if(a == 0 && b == 0 && c==1){
+    var polyarr = [0, 1, 3, 4, 5, 7,11,26, 27, 28, 30, 31, 32, 33, 41, 43, 45];
+    for(var i = 0; i < polyarr.length; i++){
+      forDatapathPoly("transLines", "transTemp", "#6DBE45", polyarr[i]);
+    }
+    forDatapath("transLines", "transTemp", "#6DBE45", 42);
+  }
+  if(a == 0 && b == 0 && c==0){
+    var polyarr = [0, 1, 2, 3, 4, 5, 7, 9, 11, 25, 27, 28, 29, 30, 31, 32, 33, 34, 36, 43, 45];
+    for(var i = 0; i < polyarr.length; i++){
+      forDatapathPoly("transLines", "transTemp", "#6DBE45", polyarr[i]);
+    }
+    forDatapath("transLines", "transTemp", "#6DBE45", 39);
+    forDatapath("transLines", "transTemp", "#6DBE45", 42);
+    forDatapath("transLines", "transTemp", "#6DBE45", 48);
+
+  }
 }
 
 /******************* SVG ******************/
 function forDatapath(divID, renderID, color, lineindex) {
     var datapath = $("#" + divID).children()[lineindex];
+    console.log(datapath);
     drawSVGLine(renderID, color, datapath.x1.animVal.value, datapath.y1.animVal.value, datapath.x2.animVal.value, datapath.y2.animVal.value)
 }
 
-function forDatapathPoly(divID, renderID, polyindex) {
+function forDatapathPoly(divID, renderID, color, polyindex) {
     var datapath = $("#" + divID).children()[polyindex].points;
     //console.log(datapath);
     var datapoints = '';
@@ -233,7 +329,7 @@ function forDatapathPoly(divID, renderID, polyindex) {
         datapoints += datapath[i].y;
         datapoints += " ";
     }
-    drawSVGPolyline(renderID, datapoints);
+    drawSVGPolyline(renderID, datapoints, color);
     //drawSVGPolyline("20,30 400,200 300,100");
 }
 
@@ -254,12 +350,11 @@ function SVG(tag) {
 }
 
 
-
-function drawSVGPolyline(ID, datapoints) {
+function drawSVGPolyline(ID, datapoints, color) {
     var $svg = $("#" + ID);
     $(SVG('polyline'))
         .attr('points', datapoints)
-        .attr('stroke', "red")
+        .attr('stroke', color)
         .attr('stroke-width', 3)
         .attr('fill', 'none')
         .attr('stroke-miterlimit', 10)
