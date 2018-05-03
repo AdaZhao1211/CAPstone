@@ -2,7 +2,7 @@ String.prototype.getbit = function(st, ed) {
     return this.substring(31 - st, 32 - ed);
 }
 
-function output(a,b){
+function output(a, b) {
     a = +a;
     b = +b;
     // if(a)
@@ -418,6 +418,53 @@ MUX2.subject = { ALU: "sb" }
 MUX3.subject = { RegisterFile: "WD3" }
 
 
+function Adder() {
+    this.A = null;
+    this.B = null;
+    this.CarryIn = null;
+    this.output = null;
+    this.CarryOut = null; //Output Components:Ports
+}
+
+Adder.prototype.set = function(A, B, CarryIn) {
+    this.A = +A;
+    this.B = +B;
+    this.CarryIn = +CarryIn;
+}
+
+Adder.prototype.update = function() {
+    var sum = this.A + this.B + this.CarryIn
+    switch (sum) {
+        case 3:
+            this.CarryOut = 1;
+            this.output = 1;
+            break;
+
+        case 2:
+            this.CarryOut = 1;
+            this.output = 0;
+            break;
+
+        case 1:
+            this.CarryOut = 0;
+            this.output = 1;
+            break;
+
+        case 0:
+            this.CarryOut = 0;
+            this.output = 0;
+            break;
+
+        default:
+            break;
+    }
+}
+
+var Adder1 = new Adder();
+var Adder2 = new Adder();
+var Adder3 = new Adder();
+var Adder4 = new Adder();
+
 
 var ALU = {
     sa: undefined,
@@ -548,19 +595,117 @@ var ALU = {
         return values;
     },
 
-    render_gates:function(){
+    render_gates: function() {
 
-        var sa =  digi(this.sa,32)
+        var sa = digi(this.sa, 32)
         var sb = digi(this.sb, 32)
         var r = digi(this.sa + this.sb, 5)
-        var output = [[sa.charAt(28),sa.charAt(29),sa.charAt(30),sa.charAt(31)],
-        [sb.charAt(28),sb.charAt(29),sb.charAt(30),sb.charAt(31)], [r.charAt(1),r.charAt(2),r.charAt(3),r.charAt(4)],
-        ['','','','','']]
-        // [+sa.charAt(28)&(+sb.charAt(28)), +sa.charAt(29)&(+sb.charAt(29)), +sa.charAt(30)&(+sb.charAt(30)), +sa.charAt(31)&(+sb.charAt(31))],
+        // var output = [[sa.charAt(28),sa.charAt(29),sa.charAt(30),sa.charAt(31)],
+        // [sb.charAt(28),sb.charAt(29),sb.charAt(30),sb.charAt(31)], \
+        // [r.charAt(1),r.charAt(2),r.charAt(3),r.charAt(4)],
+        // ['','','','','']
+        // ]
+
+        Adder1.set(sa.charAt(31), sb.charAt(31), 0)
+        Adder1.update()
+        Adder2.set(sa.charAt(30), sb.charAt(30), Adder1.CarryOut)
+        Adder2.update()
+        Adder3.set(sa.charAt(29), sb.charAt(29), Adder2.CarryOut)
+        Adder3.update()
+        Adder4.set(sa.charAt(28), sb.charAt(28), Adder3.CarryOut)
+        Adder4.update()
+
+
+        var output = [
+            [Adder4.A, Adder3.A, Adder2.A, Adder1.A],
+            [Adder4.B, Adder3.B, Adder2.B, Adder1.B],
+            [Adder4.output, Adder3.output, Adder2.output, Adder1.output],
+            // [r.charAt(1),r.charAt(2),r.charAt(3),r.charAt(4)],
+            [Adder4.CarryIn, Adder3.CarryIn, Adder2.CarryIn, Adder1.CarryIn],
+            []
+        ]
+
+        // Simulate Caryy- Lookahead Model ///
+        var adders = [Adder1, Adder2, Adder3, Adder4]
+        var P = []
+        var G = []
+
+        for (var i in adders) {
+            var adder = adders[i];
+            if (adder.A == 1 || adder.B == 1) {
+                P.push(+i)
+            }
+            if (adder.A == 1 && adder.B == 1) {
+                G.push(+i)
+            }
+        }
+        console.log("P",P)
+        console.log("G",G)
+
+        for (var i in P) {
+            switch(P[i]){
+                case 0:
+                output[4].push(10);
+                break;
+
+                case 1:
+                output[4].push(5);
+                output[4].push(9);
+                break;
+
+                case 2:
+                output[4].push(3);
+                output[4].push(8);
+                break;
+
+                case 3:
+                output[4].push(1);
+                output[4].push(7);
+                break;
+            }
+        }
+
+        for (var i in G) {
+            switch(G[i]){
+                case 0:
+                output[4].push(6);
+                break;
+
+                case 1:
+                output[4].push(4);
+                break;
+
+                case 2:
+                output[4].push(2);
+                break;
+
+                case 3:
+                output[4].push(0);
+                break;
+            }
+        }
+        if(Adder1.CarryIn == 1){
+            output[4].push(12);
+        }
+        if(P.length == 4){
+            output[4].push(11);
+        }
+        if(Adder4.CarryOut == 1){
+            output[4].push(14);
+        }
+
+        var result = (P.includes(1) && G.includes(0))?1:0
+        result = (G.includes(1) || result)?1:0;
+        result = (P.includes(2) && result)?1:0;
+        result = (G.includes(2) || result)?1:0;
+        result = (P.includes(3) && result)?1:0;
+        result = (G.includes(3) || result)?1:0;
+        if(result == 1){
+            output[4].push(13)
+        }
+        ///
 
         return output;
-        // console.log(digi(this.sa,32))
-        // renderAdderAdder()
     }
 
 }
