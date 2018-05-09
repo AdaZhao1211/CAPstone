@@ -656,7 +656,6 @@
         </div>
     </div>
     <script type="text/javascript">
-    var divIndex = 0;
     var PROGRAM_COUNTER = 0;
     var arr = [];
     var ZOOM = 0;
@@ -670,7 +669,7 @@
         lineNumbers: true
     });
 
-    $(window).mousewheel(function(event) {
+    $(".svgContainer").mousewheel(function(event) {
         ZOOM += event.deltaY * 100
         if (ZOOM <= 700 && ZOOM >= 0) {
             $("#gateCircle").attr("r", ZOOM);

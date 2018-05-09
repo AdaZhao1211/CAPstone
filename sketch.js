@@ -27,17 +27,15 @@ function testButtonClicked() {
 }
 
 function assembleButtonClicked() {
-
+    resetButtonClicked();
     var editorText = codeEditor.getValue();
     callAssemblyAPI(editorText);
-    PROGRAM_COUNTER = 0;
 }
 
 function stepButtonClicked() {
-    resetTemps();
     if (PROGRAM_COUNTER < arr.length) {
+        removeTemps();
 
-        resetButtonClicked();
         console.log("counter+", PROGRAM_COUNTER)
 
         MIPS.set(arr[PROGRAM_COUNTER].bit)
@@ -54,9 +52,7 @@ function stepButtonClicked() {
         console.log("nums", n)
         renderCUValues(n)
         PROGRAM_COUNTER++;
-
-        divIndex++;
-        renderAssemblyHighlight(divIndex)
+        renderAssemblyHighlight(PROGRAM_COUNTER)
 
         console.log("ALUrender", ALU.render())
         renderGateDatapath(ALU.render())
@@ -74,14 +70,16 @@ function stepButtonClicked() {
 }
 
 function resetButtonClicked() {
-    resetTemps();
+  PROGRAM_COUNTER = 0;
+  renderAssemblyNoHighlight();
+    removeTemps();
     resetRegisterDivs();
     renderCUValues(['', '', '', '', '', '', '']);
     // PROGRAM_COUNTER = 0;
 
 }
 
-function resetTemps(){
+function removeTemps(){
     $("#svgTemp").children().remove();
     $("#gateTemp").children().remove();
     $("#adderTemp").children().remove();
@@ -148,15 +146,21 @@ function callAssemblyAPI(editorText) {
 /************** Assembly *********/
 function renderAssemblyHighlight(divIndex) {
     codeDivs = $('#assemblyEditor .CodeMirror-code').children();
-    console.log(codeDivs);
     codeDivs.css("background-color", "white");
     $(codeDivs[divIndex]).css("background-color", "#FFF70A")
+}
+
+function renderAssemblyNoHighlight() {
+    codeDivs = $('#assemblyEditor .CodeMirror-code').children();
+    codeDivs.css("background-color", "white");
 }
 
 /*************** Microarchitecture *****************/
 function renderRegisterFile(registerNumber, registerValue) {
     var registerFile = $("#registerFile").children()[registerNumber];
-    drawSVGRect(registerFile.x.animVal.value, registerFile.y.animVal.value, registerFile.width.animVal.value, registerFile.height.animVal.value);
+    console.log("=========================================");
+    console.log(registerFile.x.animVal.value);
+    drawSVGRect("svgTemp", registerFile.x.animVal.value, registerFile.y.animVal.value);
     var registerDiv = $(".svgDiv").children()[registerNumber];
     registerDiv.innerHTML = registerValue;
 }
@@ -164,7 +168,11 @@ function renderRegisterFile(registerNumber, registerValue) {
 function renderRegisterValues(registerValues) {
     var registerDiv = $(".register");
     for (var i = 0; i < registerDiv.length; i++) {
-        registerDiv[i].innerHTML = registerValues[i];
+        if(registerDiv[i].innerHTML != registerValues[i]){
+          registerDiv[i].innerHTML = registerValues[i];
+          var registerFile = $("#registerFile").children()[i];
+          drawSVGRect("svgTemp", registerFile.x.animVal.value, registerFile.y.animVal.value);
+        }
     }
 }
 
@@ -371,6 +379,19 @@ function drawSVGPolyline(ID, datapoints, color) {
         .attr('points', datapoints)
         .attr('stroke', color)
         .attr('stroke-width', 3)
+        .attr('fill', 'none')
+        .attr('stroke-miterlimit', 10)
+        .appendTo($svg);
+}
+
+function drawSVGRect(ID, x, y) {
+    var $svg = $("#" + ID);
+    $(SVG('rect'))
+        .attr('x', x)
+        .attr('y', y)
+        .attr('width', 30)
+        .attr('height', 15)
+        .attr('stroke', "red")
         .attr('fill', 'none')
         .attr('stroke-miterlimit', 10)
         .appendTo($svg);
