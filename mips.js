@@ -773,11 +773,13 @@ var MIPS = {
         if (DataMemory.WE == 1) {
             paths.push(104)
             paths.push(4)
+            paths.push(107)//?
         }
         paths.push(1)
         paths.push(2)
         if (MUX2.S == 0) {
             paths.push(0)
+            paths.push(107)
         } else if (MUX2.S == 1) {
             paths.push(102)
             paths.push(110)
