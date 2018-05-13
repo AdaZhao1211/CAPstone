@@ -4,7 +4,7 @@ function testButtonClicked() {
 
     //a b carry-in
     renderTransistor(0, 1, 1);
-
+    renderDatapath([6]);
     //A, B, output, carry, l
     //renderAdderAdder([1, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 1], [1, 0, 1, 0], [3, 5]);
     // var a = ALU.render_gates()
