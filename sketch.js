@@ -84,8 +84,6 @@ function removeTemps(){
     $("#gateTemp").children().remove();
     $("#adderTemp").children().remove();
     $("#transTemp").children().remove();
-
-
 }
 
 function callAssemblyAPI(editorText) {
@@ -156,14 +154,6 @@ function renderAssemblyNoHighlight() {
 }
 
 /*************** Microarchitecture *****************/
-function renderRegisterFile(registerNumber, registerValue) {
-    var registerFile = $("#registerFile").children()[registerNumber];
-    console.log("=========================================");
-    console.log(registerFile.x.animVal.value);
-    drawSVGRect("svgTemp", registerFile.x.animVal.value, registerFile.y.animVal.value);
-    var registerDiv = $(".svgDiv").children()[registerNumber];
-    registerDiv.innerHTML = registerValue;
-}
 
 function renderRegisterValues(registerValues) {
     var registerDiv = $(".register");
