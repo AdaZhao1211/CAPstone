@@ -225,10 +225,9 @@ function renderAdderAdder(A, B, output, carry, l) {
     }
     for (var i = 0; i < carry.length; i++) {
         if (carry[i] == 1) {
-            forDatapath("adderLine", "adderTemp", "#25ebd1", 3 - i);
+            forDatapath("adderLine", "adderTemp", "#25ebd1", 2 - i);
         }
     }
-    adderText[12].innerHTML = carry[3];
     for (var i = 0; i < l.length; i++) {
         var ttl = l[i];
         if (ttl != 13) {
@@ -240,9 +239,20 @@ function renderAdderAdder(A, B, output, carry, l) {
 
 
 }
+
+function renderAdderValue(A, B){
+  var adderText = $("#adderText").children();
+  adderText[13].innerHTML = A;
+  adderText[15].innerHTML = B;
+}
 /******************* transistor ******************/
 
 function renderTransistor(a, b, c) {
+  var transText = $("#transText").children();
+transText[1].innerHTML = a;
+transText[3].innerHTML = b;
+transText[5].innerHTML = c;
+
     if (a == 1) {
         var achildren = $("#a").children();
         for (var i = 0; i < achildren.length; i++) {
