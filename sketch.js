@@ -42,36 +42,44 @@ function stepButtonClicked() {
         MIPS.run()
         MIPS.print()
 
+        
         simulate(arr[PROGRAM_COUNTER]);
         renderRegisterValues(Registers.getRegs())
 
+        // First layer
         var r = MIPS.renderpaths()
         renderDatapath(r)
 
         var n = MIPS.rendernums()
-        console.log("nums", n)
         renderCUValues(n)
-        PROGRAM_COUNTER++;
-        renderAssemblyHighlight(PROGRAM_COUNTER)
 
-        console.log("ALUrender", ALU.render())
+
+        // Second layer
         renderGateDatapath(ALU.render())
 
         renderGateValue(ALU.render_value())
 
+        // Third layer
         var a = ALU.render_gates()
         renderAdderAdder(a[0], a[1], a[2], a[3], a[4])
-        //Show the status of 1st Adder in the Transistor level
+
+        // Forth layer
         renderTransistor(Adder2.A, Adder2.B, Adder2.CarryIn)
 
+
+        PROGRAM_COUNTER++;
+        renderAssemblyHighlight(PROGRAM_COUNTER)
+
+        // console.log("ALUrender", ALU.render())
+
     } else {
-        alert("pc!")
+        alert("The End!")
     }
 }
 
 function resetButtonClicked() {
-  PROGRAM_COUNTER = 0;
-  renderAssemblyNoHighlight();
+    PROGRAM_COUNTER = 0;
+    renderAssemblyNoHighlight();
     removeTemps();
     resetRegisterDivs();
     renderCUValues(['', '', '', '', '', '', '']);
@@ -79,7 +87,7 @@ function resetButtonClicked() {
 
 }
 
-function removeTemps(){
+function removeTemps() {
     $("#svgTemp").children().remove();
     $("#gateTemp").children().remove();
     $("#adderTemp").children().remove();
@@ -129,6 +137,7 @@ function callAssemblyAPI(editorText) {
                 if (result.asm[i].text) {
                     returnString = result.asm[i].text
                     tempstring = returnString.replace(/ /g, '');
+                    //Ignore nop instruction
                     if (tempstring != "nop") {
                         resultString += result.asm[i].text;
                         resultString += "\n";
@@ -168,10 +177,10 @@ function renderRegisterFile(registerNumber, registerValue) {
 function renderRegisterValues(registerValues) {
     var registerDiv = $(".register");
     for (var i = 0; i < registerDiv.length; i++) {
-        if(registerDiv[i].innerHTML != registerValues[i]){
-          registerDiv[i].innerHTML = registerValues[i];
-          var registerFile = $("#registerFile").children()[i];
-          drawSVGRect("svgTemp", registerFile.x.animVal.value, registerFile.y.animVal.value);
+        if (registerDiv[i].innerHTML != registerValues[i]) {
+            registerDiv[i].innerHTML = registerValues[i];
+            var registerFile = $("#registerFile").children()[i];
+            drawSVGRect("svgTemp", registerFile.x.animVal.value, registerFile.y.animVal.value);
         }
     }
 }
@@ -194,6 +203,7 @@ function renderCUValues(CUValues) {
         t[i].innerHTML = CUValues[i];
     }
 }
+
 /****************** ALU ***********************/
 function renderGateValue(gateValues) {
     var gateText = $("#gateText").children();
@@ -248,8 +258,9 @@ function renderAdderAdder(A, B, output, carry, l) {
 
 
 }
-/******************* transistor ******************/
 
+/******************* Transistor ******************/
+//Show the status of 1st Adder in the Transistor level
 function renderTransistor(a, b, c) {
     if (a == 1) {
         var achildren = $("#a").children();
