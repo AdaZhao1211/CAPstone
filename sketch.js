@@ -3,8 +3,7 @@ function testButtonClicked() {
     //renderGateValue(["1", "01", "0", "125"]);
 
     //a b carry-in
-    renderTransistor(0, 1, 1);
-    renderDatapath([6]);
+    renderConsole("dfasdfg")
     //A, B, output, carry, l
     //renderAdderAdder([1, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 1], [1, 0, 1, 0], [3, 5]);
     // var a = ALU.render_gates()
@@ -140,7 +139,10 @@ function callAssemblyAPI(editorText) {
 }
 
 
-
+/************** Console *********/
+function renderConsole(loglog){
+  $("#consoleLogText").text(loglog);
+}
 /************** Assembly *********/
 function renderAssemblyHighlight(divIndex) {
     codeDivs = $('#assemblyEditor .CodeMirror-code').children();

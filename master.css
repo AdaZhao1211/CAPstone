@@ -52,3 +52,11 @@ div.microarchitecture{
 .gate{
   z-index: 1;
 }
+
+#consoleLog{
+  display: inline;
+  padding: 0 0 0 20px;
+}
+#consoleLogText{
+  display: inline;
+}

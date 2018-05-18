@@ -130,7 +130,7 @@ var Registers = {
     parse: function(r_name) {
         if (r_name.indexOf("(") != -1) {
 
-            var shifter = parseInt(r_name.slice(0, r_name.indexOf("("))) / 4;
+            var shifter = parseInt(r_name.slice(0, r_name.indexOf("(")));
             var nb = this.index(r_name.slice(r_name.indexOf("(") + 1, r_name.length - 1));
 
             return [shifter, nb];
@@ -184,7 +184,7 @@ for(var key in Registers.database){
     element = Registers.database[key]
     Registers.OpTable[key]=element[0]
     Registers.FuncTable[key]=element[1]
-    
+
 }
 
 
