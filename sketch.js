@@ -3,8 +3,7 @@ function testButtonClicked() {
     //renderGateValue(["1", "01", "0", "125"]);
 
     //a b carry-in
-    renderTransistor(0, 1, 1);
-    renderDatapath([6]);
+    renderConsole("dfasdfg")
     //A, B, output, carry, l
     //renderAdderAdder([1, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 1], [1, 0, 1, 0], [3, 5]);
     // var a = ALU.render_gates()
@@ -92,8 +91,6 @@ function removeTemps() {
     $("#gateTemp").children().remove();
     $("#adderTemp").children().remove();
     $("#transTemp").children().remove();
-
-
 }
 
 function callAssemblyAPI(editorText) {
@@ -151,7 +148,10 @@ function callAssemblyAPI(editorText) {
 }
 
 
-
+/************** Console *********/
+function renderConsole(loglog){
+  $("#consoleLogText").text(loglog);
+}
 /************** Assembly *********/
 function renderAssemblyHighlight(divIndex) {
     codeDivs = $('#assemblyEditor .CodeMirror-code').children();
@@ -165,14 +165,6 @@ function renderAssemblyNoHighlight() {
 }
 
 /*************** Microarchitecture *****************/
-function renderRegisterFile(registerNumber, registerValue) {
-    var registerFile = $("#registerFile").children()[registerNumber];
-    console.log("=========================================");
-    console.log(registerFile.x.animVal.value);
-    drawSVGRect("svgTemp", registerFile.x.animVal.value, registerFile.y.animVal.value);
-    var registerDiv = $(".svgDiv").children()[registerNumber];
-    registerDiv.innerHTML = registerValue;
-}
 
 function renderRegisterValues(registerValues) {
     var registerDiv = $(".register");
@@ -243,10 +235,9 @@ function renderAdderAdder(A, B, output, carry, l) {
     }
     for (var i = 0; i < carry.length; i++) {
         if (carry[i] == 1) {
-            forDatapath("adderLine", "adderTemp", "#25ebd1", 3 - i);
+            forDatapath("adderLine", "adderTemp", "#25ebd1", 2 - i);
         }
     }
-    adderText[12].innerHTML = carry[3];
     for (var i = 0; i < l.length; i++) {
         var ttl = l[i];
         if (ttl != 13) {
@@ -258,10 +249,25 @@ function renderAdderAdder(A, B, output, carry, l) {
 
 
 }
+<<<<<<< HEAD
+=======
+
+function renderAdderValue(A, B){
+  var adderText = $("#adderText").children();
+  adderText[13].innerHTML = A;
+  adderText[15].innerHTML = B;
+}
+/******************* transistor ******************/
+>>>>>>> 10d4472c6d0ab2a829116a43822b778d1d47eeff
 
 /******************* Transistor ******************/
 //Show the status of 1st Adder in the Transistor level
 function renderTransistor(a, b, c) {
+  var transText = $("#transText").children();
+transText[1].innerHTML = a;
+transText[3].innerHTML = b;
+transText[5].innerHTML = c;
+
     if (a == 1) {
         var achildren = $("#a").children();
         for (var i = 0; i < achildren.length; i++) {

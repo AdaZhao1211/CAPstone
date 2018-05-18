@@ -130,7 +130,10 @@ var Registers = {
     parse: function(r_name) {
         if (r_name.indexOf("(") != -1) {
 
+<<<<<<< HEAD
             // var shifter = parseInt(r_name.slice(0, r_name.indexOf("("))) / 4;
+=======
+>>>>>>> 10d4472c6d0ab2a829116a43822b778d1d47eeff
             var shifter = parseInt(r_name.slice(0, r_name.indexOf("(")));
             var nb = this.index(r_name.slice(r_name.indexOf("(") + 1, r_name.length - 1));
 
@@ -183,8 +186,13 @@ var Registers = {
 // Fill up the OpTable and FuncTable
 for (var key in Registers.database) {
     element = Registers.database[key]
+<<<<<<< HEAD
     Registers.OpTable[key] = element[0]
     Registers.FuncTable[key] = element[1]
+=======
+    Registers.OpTable[key]=element[0]
+    Registers.FuncTable[key]=element[1]
+>>>>>>> 10d4472c6d0ab2a829116a43822b778d1d47eeff
 
 }
 
@@ -421,4 +429,27 @@ function simulate(format) {
         };
     }
 
+<<<<<<< HEAD
 }
+=======
+}
+
+
+//Simulate the registers
+
+// console.log(Registers.getRegs())
+// for (var i = 0; i < arr.length; i += 1) {
+
+// setTimeout(function(x) {
+
+
+// var change = simulate(arr[i]);
+
+
+
+
+// console.log(change);
+// console.log(Registers.getRegs());
+// }, i * 1000, i)
+// }
+>>>>>>> 10d4472c6d0ab2a829116a43822b778d1d47eeff
