@@ -519,7 +519,7 @@ var ALU = {
         } else if (this.control === "111") {
             //SLT
             this.output = (this.sa < this.sb) ? 1 : 0
-        } 
+        }
         this.zero = (this.output == 0)
         if (this.output == undefined) {
             return undefined
@@ -596,6 +596,8 @@ var ALU = {
         values.push(F10);
         values.push(this.output)
         values.push(this.zero)
+        values.push(this.sa)
+        values.push(this.sb)
         return values;
     },
 
@@ -626,8 +628,10 @@ var ALU = {
             [Adder4.output, Adder3.output, Adder2.output, Adder1.output],
             // [r.charAt(1),r.charAt(2),r.charAt(3),r.charAt(4)],
             [Adder4.CarryIn, Adder3.CarryIn, Adder2.CarryIn, Adder1.CarryIn],
-            []
+            [],
+            [] //source
         ]
+        output[5] = [this.sa+" "+sa, this.sb+" "+sb]
 
         // Simulate Caryy- Lookahead Model ///
         var adders = [Adder1, Adder2, Adder3, Adder4]

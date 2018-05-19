@@ -684,6 +684,13 @@
     var assemblyEditor = CodeMirror(document.getElementById("assemblyEditor"), {
         lineNumbers: true
     });
+    // document.addEventListener('mousewheel',function(event){
+    //   mouseController.wheel(event);
+    //   return false;
+    // }, false);
+    document.ontouchmove = function(e){
+      console.log("done");
+      e.preventDefault(); }
 
     $(".svgContainer").mousewheel(function(event) {
         ZOOM += event.deltaY * 100

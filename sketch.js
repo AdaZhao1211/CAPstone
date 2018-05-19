@@ -41,7 +41,7 @@ function stepButtonClicked() {
         MIPS.run()
         MIPS.print()
 
-        
+
         simulate(arr[PROGRAM_COUNTER]);
         renderRegisterValues(Registers.getRegs())
 
@@ -61,7 +61,7 @@ function stepButtonClicked() {
         // Third layer
         var a = ALU.render_gates()
         renderAdderAdder(a[0], a[1], a[2], a[3], a[4])
-
+        renderAdderValue(a[5])
         // Forth layer
         renderTransistor(Adder2.A, Adder2.B, Adder2.CarryIn)
 
@@ -249,16 +249,13 @@ function renderAdderAdder(A, B, output, carry, l) {
 
 
 }
-<<<<<<< HEAD
-=======
 
-function renderAdderValue(A, B){
+function renderAdderValue(source){
   var adderText = $("#adderText").children();
-  adderText[13].innerHTML = A;
-  adderText[15].innerHTML = B;
+  adderText[13].innerHTML = source[0];
+  adderText[15].innerHTML = source[1];
 }
-/******************* transistor ******************/
->>>>>>> 10d4472c6d0ab2a829116a43822b778d1d47eeff
+
 
 /******************* Transistor ******************/
 //Show the status of 1st Adder in the Transistor level
