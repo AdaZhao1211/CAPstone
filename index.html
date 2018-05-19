@@ -16,7 +16,6 @@
 
 <body>
     <div class="title">
-        <h3>MIPS Architecture Probe</h3>
     </div>
     <div class="container">
         <div class="codeView">
@@ -688,12 +687,18 @@
     //   mouseController.wheel(event);
     //   return false;
     // }, false);
-    document.ontouchmove = function(e){
-      console.log("done");
-      e.preventDefault(); }
+    // document.ontouchmove = function(e){
+    //   console.log("done");
+    //   e.preventDefault(); }]
 
+    function preventDefault(e){
+      e = e || window.evnet;
+      if( e.preventDefault)
+        e.preventDefault();
+      e.returnValue = false;
+    }
     $(".svgContainer").mousewheel(function(event) {
-        ZOOM += event.deltaY * 100
+        ZOOM += event.deltaY * 10
         if (ZOOM <= 700 && ZOOM >= 0) {
             $("#gateCircle").attr("r", ZOOM);
         }else if(ZOOM >= 800 && ZOOM <= 1500){
@@ -715,6 +720,8 @@
           $("#transCircle").attr("r", 0);
 
         }
+        window.onwheel = preventDefault;
+
     });
     </script>
 </body>
